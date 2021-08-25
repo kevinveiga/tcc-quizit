@@ -1,0 +1,13 @@
+export enum ActionType {
+    ADDED = 'ADDED',
+    ATTEMPTING = 'ATTEMPTING',
+    FAILED = 'FAILED',
+    INITIATED = 'INITIATED',
+    LOGGED_IN = 'LOGGED_IN',
+    LOGGED_OUT = 'LOGGED_OUT',
+    READED = 'READED',
+    REMOVED = 'REMOVED',
+    REMOVED_ALL = 'REMOVED_ALL',
+    SUCCEED = 'SUCCEED',
+    UPDATED = 'UPDATED'
+}

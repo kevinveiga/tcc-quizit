@@ -1,0 +1,81 @@
+# Others
+*~
+*#
+*.jks
+*.jsbundle
+*.key
+*.mobileprovision
+*.orig.*
+*.p12
+*.p8
+web-build/
+.#*
+.expo/*
+
+# Environment
+.env*
+!.env.template
+
+# IDE and Editors
+/.vscode
+/nbproject
+/packages/api/etc
+*.sublime-project
+*.sublime-workspace
+_notes
+.brackets.json
+.idea
+.project
+
+# Npm & Yarn
+/node_modules
+.npm
+.yarn-integrity
+npm-debug.*
+package-lock.json
+yarn-debug.log*
+yarn-error.log*
+yarn.lock*
+
+# Android
+*.hmap
+*.iml
+*.ipa
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+*.xccheckout
+*.xcuserstate
+build/
+.gradle
+DerivedData
+local.properties
+xcuserdata
+!default.mode1v3
+!default.mode2v3
+!default.pbxuser
+!default.perspectivev3
+
+# Buck
+buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
+
+# IOS
+/ios/Pods/
+.DS_Store
+
+# Fastlane
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
+*/fastlane/Preview.html
+*/fastlane/report.xml
+*/fastlane/screenshots
+
+# Gitkeep
+!**/.gitkeep
