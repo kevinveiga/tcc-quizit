@@ -19,8 +19,6 @@ Pastas dentro de src:
 
 -   Seguindo padrões mais novos do React, **NÃO USE CONST PARA COMPONENTES**. Olhando os exemplos mais novos, componentes são declarados como function ao invés de const. O motivo principal do React estar usando function ao invés de declarar const, é que a function funciona fora de ordem na chamada, e const precisa estar declarado anteriormente ao uso do mesmo. Um componente não é constante, e sim, função. Faz sentido usar const para funções anônimas, mas o componente por si só não é função anônima, e sim, uma função bem definida.
 -   Funções compartilhadas, ficam dentro de helpers apropriados. Não fique espalhando com Copy/Paste, códigos duplicados.
--   Ao invés de implementar algo novo, **USE O QUE JÁ TEMOS**. Não queremos uma função nova "Super-Pica das Galáxias" que faça tudo. Use as que já tem, olhe nos helpers, e reaproveite. Se uma funcionalidade está faltando algo, aprimore-a ao invés de criar algo novo do seu gosto. É código _COLABORATIVO_, não código individual.
--   **NÃO QUEREMOS FUNCIONALIDADES DO TIPO ShortDate2, ShortDate3, ShortDateInfinito**. Pense um pouco em como nomear melhor as funcionalidades.
 
 ### **CONFIGURAÇÃO**
 
@@ -94,18 +92,23 @@ cd $PWD
 
 ### **ANDROID**
 
+#### CHAVE SHA1
+
+-   Para pegar a chave SHA1, digite no terminal:
+    keytool -list -v -alias androiddebugkey -keystore android/app/debug.keystore
+
 #### EMULADOR
 
 -   Melhor opção para emulador é utilizando um aparelho, seguir este link [https://react-native.rocketseat.dev/usb/android](https://react-native.rocketseat.dev/usb/android)
 
-#### COMANDOS
+#### COMANDOS DE DESENVOLVIMENTO OU PUBLICAÇÃO
 
--   Executar no terminal apenas na primeira vez ou sempre que atualizar o package.json:
+##### Primeira execução ou sempre que atualizar o package.json
+
+-   Executar no terminal:
     yarn install
 
-##### Ambiente de desenvolvimento por USB
-
-###### Com o aparelho conectado e autorizado
+##### Ambiente de desenvolvimento por USB (com o aparelho conectado e autorizado)
 
 -   Executar server em um terminal:
     yarn run start --reset-cache
@@ -133,14 +136,14 @@ cd $PWD
 
     yarn run publish:dev bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
 
--   Versão Debug do APK, executar no terminal o comando:
+-   Versão Debug do APK, executar no terminal:
     cd android && ./gradlew clean assembleDebug && cd ..
 
     \*Obs: os arquivos de APK se encontram na pasta android/app/build/outputs/apk/debug,
     cada arquivo é para um range de versões do Android, no Moto G7, por exemplo, funcionou o arquivo
     app-armeabi-v7a-debug
 
--   Versão Release do APK, executar no terminal o comando:
+-   Versão Release do APK, executar no terminal:
     cd android && ./gradlew clean assembleRelease && cd ..
 
     \*Obs: os arquivos de APK se encontram na pasta android/app/build/outputs/apk/release,
@@ -167,6 +170,8 @@ cd $PWD
 #### REFERÊNCIAS
 
 -   [https://developer.android.com/](https://developer.android.com/)
+
+-   [Publicar no Google Play](https://reactnative.dev/docs/signed-apk-android)
 
 ### **IOS**
 

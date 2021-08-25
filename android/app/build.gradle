@@ -196,7 +196,7 @@ dependencies {
 
     // Firebase
     // Sobre Firebase-BoM: https://firebase.google.com/docs/android/learn-more?authuser=0#bom
-    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
 
     // When using the BoM, you don't specify versions in Firebase library
     implementation 'com.google.firebase:firebase-analytics'
