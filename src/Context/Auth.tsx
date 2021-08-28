@@ -1,10 +1,11 @@
-import React, { createContext, PropsWithChildren, ReactElement, useContext, useEffect, useReducer } from 'react';
+import React, { createContext, PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 
-import { storageAuthName } from '../Config';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
 import { responseError } from '../Helper/ResponseError';
 import { api } from '../Service/Api';
 import { login, ILogin } from '../Service/Auth';
-import { clearStorage, getStorageJson, setStorage } from '../Service/Storage';
 import { ActionType } from '../Store/Action/ActionType';
 import { IAuth, authReducer, initialState } from '../Store/Reducer/Auth';
 
@@ -27,38 +28,27 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
     // REDUCER
     const [stateAuth, dispatch] = useReducer(authReducer, initialState);
 
-    // Ao iniciar o App, verifica se já existe um storage de autenticação,
-    // então pega o "data" desse storage e faz um dispatch alterando "stateAuth"
-    useEffect(() => {
-        getStorageJson(storageAuthName)
-            .then((res) => {
-                if (res?.data) {
-                    dispatch({ payload: res?.data, type: ActionType.LOGGED_IN });
-                }
-            })
-            .catch(() => console.log('Sem storage de autenticação'));
+    // STATE
+    // const [stateInitializing, setStateInitializing] = useState(true);
 
-        return undefined;
+    const onAuthStateChanged = useCallback((user: any): void => {
+        dispatch({ payload: user, type: user ? ActionType.LOGGED_IN : ActionType.LOGGED_OUT });
+
+        // if (stateInitializing) {
+        //     setStateInitializing(false);
+        // }
     }, []);
 
-    // Ao alterar o state de autenticação, atualiza o storage
+    // Inicia o GoogleSignin
     useEffect(() => {
-        const { data: dataAuth } = stateAuth;
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
 
-        // Se o data for diferente de "undefined", grava os dados de autenticação do usuário no storage,
-        // então muda o "headers" de autorização
-        if (dataAuth !== undefined) {
-            setStorage(storageAuthName, stateAuth)
-                .then(() => {
-                    api.defaults.headers.Authorization = `Bearer ${dataAuth?.token as string}`;
-                })
-                .catch((err) => {
-                    throw new Error(err);
-                });
-        }
+        GoogleSignin.configure({
+            webClientId: '831888473895-0s1jbjqakmh0n3f1531ra32e1qt2nrd8.apps.googleusercontent.com'
+        });
 
-        return undefined;
-    }, [stateAuth]);
+        return subscriber;
+    }, [onAuthStateChanged]);
 
     // ACTION
     const actions = {
@@ -91,20 +81,21 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
             }
         },
         logout: async (): Promise<void> => {
-            await clearStorage()
-                .then(() => {
-                    dispatch({
-                        type: ActionType.LOGGED_OUT
-                    });
-                })
-                .catch(() => {
-                    dispatch({
-                        error: 'Falha ao fazer o logout',
-                        type: ActionType.FAILED
-                    });
+            try {
+                await auth().signOut();
+            } catch (err) {
+                dispatch({
+                    error: `Falha ao fazer o logout: ${err as string}`,
+                    type: ActionType.FAILED
                 });
+            }
         }
     };
+
+    // Se está inicializando o app, então retorna vazio
+    // if (stateInitializing) {
+    //     return <></>;
+    // }
 
     return <AuthContext.Provider value={{ stateAuth: stateAuth, actions: actions }}>{children}</AuthContext.Provider>;
 }

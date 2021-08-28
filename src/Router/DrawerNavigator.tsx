@@ -133,7 +133,7 @@ export default function DrawerNavigator(): ReactElement {
     return (
         <Drawer.Navigator
             drawerContent={(props): ReactElement => <MenuDrawerContent {...props} />}
-            initialRouteName={status === ActionType.LOGGED_IN ? 'Cursos' : 'Home'}
+            initialRouteName={status === ActionType.LOGGED_IN ? 'Admin' : 'Home'}
             screenOptions={{ ...header, headerTitleAlign: 'center' }}
         >
             {routes.map(({ authRequired = true, component: Component, layout: Layout, routeLabel }: IRoutes) => {
@@ -170,12 +170,12 @@ export default function DrawerNavigator(): ReactElement {
                         {(): ReactElement => (
                             <Layout>
                                 <ErrorBoundary>
-                                    {/* Exibe componente que não precisa de autenticação */}
-                                    {!authRequired && <Component />}
-
-                                    {/* Se estiver logado, verifica se a rota precisa de autenticação,
-                                        e exibe componente que precisa de autenticação */}
-                                    {status === ActionType.LOGGED_IN && authRequired && <Component />}
+                                    {/*
+                                    - Se o componente precisa de autenticação, verifica se está logado e exibe o componente.
+                                    - Se não estiver logado e o componente não precisa de autenticação, exibe o componente.
+                                    - Se o componente precisa de autenticação e não está logado, então não exibe o componente (null)
+                                    */}
+                                    {authRequired && status === ActionType.LOGGED_IN ? <Component /> : !authRequired ? <Component /> : null}
                                 </ErrorBoundary>
                             </Layout>
                         )}

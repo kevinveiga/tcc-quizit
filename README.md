@@ -394,9 +394,11 @@ stateLista.length > 0;
 
 -   [Unform - Vídeo](https://www.youtube.com/watch?v=P65RJTTqkN4&ab_channel=Rocketseat)
 
-#### **LOGIN DA GOOLE**
+#### **LOGINS**
 
--   [Login da Google](https://rnfirebase.io/auth/social-auth)
+-   [Login do Google](https://rnfirebase.io/auth/social-auth)
+
+-   [Login do Facebook](https://www.youtube.com/watch?v=pDLo7Pfcvfk&ab_channel=PradipDebnath)
 
 #### **NAVIGATION**
 
