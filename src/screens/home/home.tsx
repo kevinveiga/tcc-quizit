@@ -21,9 +21,9 @@ import { inputSecondary } from '../../styles/form';
 import { layout } from '../../styles/layout';
 import { variable } from '../../styles/variable';
 
-import ImageHomeTop from '../../Asset/Image/home-top.png';
-import SvgKey from '../../Asset/Svg/svg-key.svg';
-import SvgUser from '../../Asset/Svg/svg-user.svg';
+import ImageHomeTop from '../../assets/image/home-top.png';
+import SvgKey from '../../assets/svg/svg-key.svg';
+import SvgUser from '../../assets/svg/svg-user.svg';
 
 interface IFormLogin {
     email: string;
