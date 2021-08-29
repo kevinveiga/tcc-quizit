@@ -53,16 +53,16 @@ sudo npm install -g yarn
 
 Pastas dentro de src:
 
--   Asset: Todos os "assets" do aplicativo
--   Component: Componentes customizados para o aplicativo
--   Context: Contextos de controle dos estados ou funcionalidades usadas em todo o aplicativo
--   Entity: Interfaces para o autocompletar das API's
--   Helper: Funções úteis para uso em geral no aplicativo
--   Router: Rotas do aplicativo são controladas pelo StackNavigator, usando os dados em Routes.ts, a parte responsável pelos menus são controladas pelo DrawerNavigator, usando os dados em Routes.ts
--   Screen: Telas do aplicativo
--   Service: Serviços externos, como requisições das API's, ou ferramentas que não tem um porquê de estar misturada com a lógica da aplicação
--   Store: Actions, reducers e custom hooks
--   Style: Estilos do aplicativo
+-   assets: Todos os "assets" do aplicativo
+-   components: Componentes customizados para o aplicativo
+-   contexts: Contextos de controle dos estados ou funcionalidades usadas em todo o aplicativo
+-   entities: Interfaces para o autocompletar das API's
+-   helpers: Funções úteis para uso em geral no aplicativo
+-   routers: Rotas do aplicativo são controladas pelo StackNavigator, usando os dados em Routes.ts, a parte responsável pelos menus são controladas pelo DrawerNavigator, usando os dados em Routes.ts
+-   screens: Telas do aplicativo
+-   services: Serviços externos, como requisições das API's, ou ferramentas que não tem um porquê de estar misturada com a lógica da aplicação
+-   stores: Actions, reducers e custom hooks
+-   styles: Estilos do aplicativo
 
 #### **NOTAS DE CÓDIGO**
 
@@ -71,11 +71,12 @@ Pastas dentro de src:
 
 ### **PADRÕES DO PROJETO**
 
--   Nomes no singular: Todas as pastas;
--   Idioma inglês: Todos os nomes, exceto nomes próprios, como seções ou páginas;
--   lowerCamelCase: Nomes de arquivos comuns, variáveis, propriedades, funções, métodos - Ex: functionName;
--   UpperCamelCase: Nomes de pastas dentro de "/src", arquivos .ts e .tsx, imports, interfaces - Ex: ComponentName, Header.js;
--   spinal-case: Arquivos de imagens, svgs, exceto pastas de componentes e arquivos de componentes - Ex: topo-imagem-1.jpg, Header.js;
+-   Nomes no singular: Todas as pastas, exceto as pastas na raiz de "src"
+-   Nomes no plural: Todas as pastas na raiz de "src", nomes de arquivos específicos, como por exemplo, que trazem uma lista de dados. Ex: src/screens/noticias.tsx
+-   Idioma inglês: Todos os nomes, exceto nomes próprios, como seções ou páginas
+-   lowerCamelCase: Pastas, nomes de arquivos, custom hooks, variáveis, funções, propriedades, métodos. Ex: useAuth(), functionName
+-   UpperCamelCase: Nomes dos componentes, nomes de styled components, imports, interfaces. Ex: Home(), AuthProvider()
+-   spinal-case: Nomes de arquivos fonts, imagens ou svgs, nomes de classes CSS. Ex: src/pages/fale-conosco.tsx, public/images/banner-principal.jpg, public/svgs/svg-user.svg, .has-value
 
 ### **ANDROID**
 
@@ -278,7 +279,7 @@ Melhor opção para emulador é utilizando um aparelho, seguir este link [https:
 
 #### **BOAS PRÁTICAS**
 
--   [10 coisas que não se deve fazer no React](https://medium.com/better-programming/10-things-not-to-do-when-building-react-applications-bc26d4f38644);
+-   [10 coisas que não se deve fazer no React](https://medium.com/better-programming/10-things-not-to-do-when-building-react-applications-bc26d4f38644)
 
 -   [React Clean Code](https://javascript.plainenglish.io/6-important-tips-to-write-clean-react-code-5ef29d6a73a6)
 
@@ -301,24 +302,24 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 // OTHERS
-import { apiUrlLogin } from '../Config';
-import { useAuth } from '../../Context/Auth';
-import { maskPhone } from './Helper/Mask';
+import { apiUrlLogin } from '../config';
+import { useAuth } from '../../contexts/auth';
+import { maskPhone } from './helpers/mask';
 
 // COMPONENT
-import { Modal } from './Component/Modal/Modal';
+import { Modal } from './components/modal/modal';
 
 // SCREEN
-import Login from './Screen/Login/Login';
+import Login from './screens/login/login';
 
 // STYLE
-import { layout } from './Style/Layout';
+import { layout } from './styles/layout';
 
 // SVG
-import imageName from './Asset/Svg/svg-svgName.svg';
+import imageName from './assets/svg/svg-svgName.svg';
 
 // IMAGE
-import imageName from './Asset/Image/imageName.jpg';
+import imageName from './assets/image/imageName.jpg';
 ```
 
 -   Organização de código dentro do componente
@@ -468,4 +469,4 @@ onChangeText={(
 
 -   Depois das otimizações no Inkscape, otimizar o arquivo no site [SvgOmg](https://jakearchibald.github.io/svgomg/)
 
--   Os arquivos de svg se encontram na pasta 'Assets/Svgs', o nome dos arquivos e suas propriedades das tags, devem seguir o padrão das já existentes
+-   Os arquivos de svg se encontram na pasta 'assets/svg', o nome dos arquivos e suas propriedades das tags, devem seguir o padrão das já existentes

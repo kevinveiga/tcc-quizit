@@ -55,10 +55,10 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>OpenSans-Bold.ttf</string>
-		<string>OpenSans-ExtraBold.ttf</string>
-		<string>OpenSans-Light.ttf</string>
-		<string>OpenSans-Regular.ttf</string>
+		<string>opensans-bold.ttf</string>
+		<string>opensans-extrabold.ttf</string>
+		<string>opensans-light.ttf</string>
+		<string>opensans-regular.ttf</string>
 	</array>
 </dict>
 </plist>

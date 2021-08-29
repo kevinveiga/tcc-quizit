@@ -20,7 +20,7 @@
 
 # Generated
 /public/asset
-/src/Assets
+/src/assets
 
 # IDE and Editors
 /.vscode
