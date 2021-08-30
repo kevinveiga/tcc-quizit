@@ -84,6 +84,12 @@ Pastas dentro de src:
 
 -   Instalação de NodeJS, Yarn e Android Studio de acordo com esse link [https://react-native.rocketseat.dev/android/linux](https://react-native.rocketseat.dev/android/linux)
 
+-   Instalar Google Licensing Library [https://www.kindacode.com/article/react-native-please-accept-all-necessary-android-sdk-licenses/](https://www.kindacode.com/article/react-native-please-accept-all-necessary-android-sdk-licenses/)
+
+-   Aumentar o limite de arquivos observados no sistema [https://stackoverflow.com/questions/55763428/react-native-error-enospc-system-limit-for-number-of-file-watchers-reached](https://stackoverflow.com/questions/55763428/react-native-error-enospc-system-limit-for-number-of-file-watchers-reached)
+
+-   Configurar o MultiDex [https://developer.android.com/studio/build/multidex?hl=pt-br](https://developer.android.com/studio/build/multidex?hl=pt-br)
+
 -   Incluir no arquivo $HOME/.bashrc as linhas de código:
 
 ```
