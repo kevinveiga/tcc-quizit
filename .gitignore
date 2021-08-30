@@ -39,6 +39,7 @@ yarn.lock*
 
 # Android
 *.hmap
+*.hprof
 *.iml
 *.ipa
 *.mode1v3
