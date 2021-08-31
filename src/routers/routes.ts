@@ -4,7 +4,7 @@ import { LayoutAdmin } from '../components/layout/layoutAdmin';
 import { LayoutDefault } from '../components/layout/layoutDefault';
 import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
-import Home from '../screens/home/home';
+import Ajuda from '../screens/ajuda/ajuda';
 import Login from '../screens/login/login';
 import * as Admin from '../screens/admin';
 
@@ -29,10 +29,10 @@ export interface IRoutes {
 export const routes: IRoutes[] = [
     {
         authRequired: false,
-        component: Home,
+        component: Ajuda,
         layout: LayoutDefault,
-        order: 0,
-        routeLabel: 'Home'
+        order: 1,
+        routeLabel: 'Ajuda'
     },
     {
         authRequired: false,
@@ -42,17 +42,11 @@ export const routes: IRoutes[] = [
         routeLabel: 'Login',
         showHeader: false
     },
-    // Minha Conta
+    // Admin
     {
         component: Admin.Admin,
         layout: LayoutAdmin,
         order: 0,
-        routeLabel: 'Minha Conta'
-    },
-    {
-        component: Admin.AdminAjuda,
-        layout: LayoutAdmin,
-        order: 1,
-        routeLabel: 'Ajuda'
+        routeLabel: 'Admin'
     }
 ];

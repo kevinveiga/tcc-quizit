@@ -106,6 +106,8 @@ export const theme: ITheme = {
         },
         inputStyle: {
             backgroundColor: variable.colorWhite,
+            borderColor: variable.colorGrayLight,
+            borderWidth: 1,
             minHeight: variable.inputHeight,
             padding: 10
         },

@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Platform, ScrollView, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
@@ -35,16 +35,6 @@ function Login(): ReactElement {
         password: ''
     };
 
-    // STYLE
-    const styles = StyleSheet.create({
-        homeTop: {
-            width: '100%'
-        },
-        login: {
-            width: '100%'
-        }
-    });
-
     // CONTEXT
     const { stateAuth, actions } = useAuth();
     const navigation = useNavigation();
@@ -59,16 +49,20 @@ function Login(): ReactElement {
             Alert.alert('Erro:', error, [{ text: 'Fechar' }]);
         }
 
+        return undefined;
+    }, [error]);
+
+    useEffect(() => {
         if (status === ActionType.LOGGED_IN) {
             if (routeToRedirect) {
                 navigation.dispatch(CommonActions.navigate({ name: routeToRedirect, params: routeParams }));
             } else {
-                navigation.dispatch(CommonActions.navigate({ name: 'Home' }));
+                navigation.dispatch(CommonActions.navigate({ name: 'Admin' }));
             }
         }
 
         return undefined;
-    }, [error, navigation, routeParams, routeToRedirect, status]);
+    }, [navigation, routeParams, routeToRedirect, status]);
 
     // FORM
     const formRef = useRef<FormHandles>(null);
@@ -103,15 +97,15 @@ function Login(): ReactElement {
     };
 
     return (
-        <View style={{ ...layout.container, ...styles.homeTop }}>
+        <View style={{ ...layout.container }}>
             <ScrollView>
                 <Spacer height={25} />
 
                 <Title1 textAlign="center">QUIZ IT</Title1>
 
-                <Spacer />
+                <Spacer height={25} />
 
-                <View style={styles.login}>
+                <View>
                     <Form initialData={initialData} onSubmit={handleSubmit} ref={formRef}>
                         <View>
                             <View>
@@ -136,6 +130,30 @@ function Login(): ReactElement {
                         </View>
                     </Form>
                 </View>
+
+                <Spacer height={25} />
+
+                {Platform.OS === 'android' ? (
+                    <View>
+                        <Button
+                            buttonStyle={button.buttonPrimary}
+                            disabled={status === ActionType.ATTEMPTING}
+                            onPress={(): any => formRef.current?.submitForm()}
+                            title="Login Google"
+                            type="solid"
+                        />
+
+                        <Spacer height={25} />
+
+                        <Button
+                            buttonStyle={button.buttonPrimary}
+                            disabled={status === ActionType.ATTEMPTING}
+                            onPress={(): any => formRef.current?.submitForm()}
+                            title="Login Facebook"
+                            type="solid"
+                        />
+                    </View>
+                ) : null}
             </ScrollView>
         </View>
     );

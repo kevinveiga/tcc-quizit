@@ -27,12 +27,20 @@ export const inputSecondary = StyleSheet.create({
     },
     leftIconContainerStyle: {
         backgroundColor: variable.colorGrayLight3,
-        borderRightColor: variable.colorGrayLight,
-        borderRightWidth: 1
+        borderBottomColor: variable.colorGrayLight,
+        borderBottomWidth: 1,
+        borderLeftColor: variable.colorGrayLight,
+        borderLeftWidth: 1,
+        borderTopColor: variable.colorGrayLight,
+        borderTopWidth: 1
     },
     rightIconContainerStyle: {
         backgroundColor: variable.colorGrayLight3,
-        borderLeftColor: variable.colorGrayLight,
-        borderLeftWidth: 1
+        borderBottomColor: variable.colorGrayLight,
+        borderBottomWidth: 1,
+        borderRightColor: variable.colorGrayLight,
+        borderRightWidth: 1,
+        borderTopColor: variable.colorGrayLight,
+        borderTopWidth: 1
     }
 });

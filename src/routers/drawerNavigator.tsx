@@ -17,7 +17,7 @@ import { variable } from '../styles/variable';
 
 import SvgClose from '../assets/svg/svg-close.svg';
 import SvgMenu from '../assets/svg/svg-menu.svg';
-import SvgMessage from '../assets/svg/svg-message.svg';
+import SvgUser from '../assets/svg/svg-user.svg';
 
 const Drawer = createDrawerNavigator();
 
@@ -84,7 +84,7 @@ function MenuDrawerContent({ descriptors, navigation, state, props }: any): Reac
                         label="Logout"
                         onPress={(): any => {
                             actions?.logout()?.then(() => {
-                                navigation.navigate('Home');
+                                navigation.navigate('Login');
                             });
                         }}
                     />
@@ -112,11 +112,6 @@ export function DrawerNavigator(): ReactElement {
         drawerNavigatorRight: {
             paddingRight: variable.padding
         },
-        logoWrapper: {
-            alignItems: 'center',
-            height: '100%',
-            width: 150
-        },
         messageNumberWarp: {
             alignItems: 'center',
             backgroundColor: variable.colorWhite,
@@ -139,7 +134,7 @@ export function DrawerNavigator(): ReactElement {
     return (
         <Drawer.Navigator
             drawerContent={(props): ReactElement => <MenuDrawerContent {...props} />}
-            initialRouteName={status === ActionType.LOGGED_IN ? 'Admin' : 'Home'}
+            initialRouteName={status === ActionType.LOGGED_IN ? 'Admin' : 'Login'}
             screenOptions={{ ...header, headerTitleAlign: 'center' }}
         >
             {routes.map(({ authRequired = true, component: Component, layout: Layout, routeLabel, showHeader = true }: IRoutes) => {
@@ -151,7 +146,7 @@ export function DrawerNavigator(): ReactElement {
                             drawerLabel: routeLabel,
                             headerTitle: (): ReactElement => {
                                 return (
-                                    <View style={styles.logoWrapper}>
+                                    <View>
                                         <Title3>{displayName}</Title3>
                                     </View>
                                 );
@@ -168,8 +163,8 @@ export function DrawerNavigator(): ReactElement {
                             },
                             headerRight: (): ReactElement => {
                                 return (
-                                    <TouchableOpacity onPress={(): any => navigation.navigate('Home')} style={styles.drawerNavigatorRight}>
-                                        <SvgMessage height="25px" width="25px" fill={variable.colorPrimary} />
+                                    <TouchableOpacity onPress={(): any => navigation.navigate('Login')} style={styles.drawerNavigatorRight}>
+                                        <SvgUser height="25px" width="25px" fill={variable.colorPrimary} />
                                     </TouchableOpacity>
                                 );
                             },
