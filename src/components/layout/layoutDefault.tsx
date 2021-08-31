@@ -1,11 +1,11 @@
 import React, { PropsWithChildren, ReactElement } from 'react';
 import { View } from 'react-native';
 
-import FooterDefault from './footerDefault';
+import { FooterDefault } from './footerDefault';
 
 import { layout } from '../../styles/layout';
 
-export default function LayoutDefault({ children }: PropsWithChildren<any>): ReactElement {
+export function LayoutDefault({ children }: PropsWithChildren<any>): ReactElement {
     return (
         <View style={layout.mainDefault}>
             <View style={layout.content}>{children}</View>

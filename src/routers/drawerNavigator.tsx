@@ -100,7 +100,7 @@ function MenuDrawerContent({ descriptors, navigation, state, props }: any): Reac
     );
 }
 
-export default function DrawerNavigator(): ReactElement {
+export function DrawerNavigator(): ReactElement {
     // VARIABLE
     const messageNumberWrapSize = 15;
 
@@ -142,7 +142,7 @@ export default function DrawerNavigator(): ReactElement {
             initialRouteName={status === ActionType.LOGGED_IN ? 'Admin' : 'Home'}
             screenOptions={{ ...header, headerTitleAlign: 'center' }}
         >
-            {routes.map(({ authRequired = true, component: Component, layout: Layout, routeLabel }: IRoutes) => {
+            {routes.map(({ authRequired = true, component: Component, layout: Layout, routeLabel, showHeader = true }: IRoutes) => {
                 return (
                     <Drawer.Screen
                         key={routeLabel}
@@ -173,7 +173,7 @@ export default function DrawerNavigator(): ReactElement {
                                     </TouchableOpacity>
                                 );
                             },
-                            headerShown: true
+                            headerShown: showHeader
                         })}
                     >
                         {(): ReactElement => (

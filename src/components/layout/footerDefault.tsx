@@ -4,7 +4,7 @@ import { P } from '../text/p';
 
 import { variable } from '../../styles/variable';
 
-export default function FooterDefault(): ReactElement {
+export function FooterDefault(): ReactElement {
     return (
         <>
             <P color={variable.colorWhite} textAlign="center">

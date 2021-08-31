@@ -3,11 +3,11 @@ import { View } from 'react-native';
 
 import { useVerifyAuthentication } from '../../stores/auth/verifyAuthentication';
 
-import FooterDefault from './footerDefault';
+import { FooterDefault } from './footerDefault';
 
 import { layout } from '../../styles/layout';
 
-export default function LayoutAdmin({ children }: PropsWithChildren<any>): ReactElement {
+export function LayoutAdmin({ children }: PropsWithChildren<any>): ReactElement {
     // Verifica autenticação
     useVerifyAuthentication();
 

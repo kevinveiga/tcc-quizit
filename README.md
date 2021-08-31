@@ -356,15 +356,43 @@ export default function ComponentName(): ReactElement {
 
 #### **BOAS PRÁTICAS**
 
--   Componentes e custom hooks não devem ser constantes. Ex:
+-   Componentes, custom hooks, reducers não devem ser constantes, eu seja, funções do React são declaradas como function, já em funções de JavaScript, utilize const. Ex:
 
 ```jsx
-export default function App(): ReactElement {...}
+function Home(): ReactElement {
+    ...
+}
+
+export default Home;
 
 export function useApp(): IAppContext {...}
+
+export const HomeStyled = styled.div`...`;
+
+export const maskPhone = (value: string): IMask => {...}
 ```
 
--   Usar export default somente em arquivos que retornam um único componente com código jsx, como por exemplo os componentes de "Screen"
+-   Usar export default somente em componentes da pasta "src/screens", exceto em funções expecíficas. Ex:
+
+```jsx
+import * as yup from 'yup';
+
+yup.setLocale({
+    ...
+});
+
+export default yup;
+```
+
+-   Quando for utilizado o export default, usar no final do arquivo. Ex:
+
+```jsx
+function MyApp({ Component, pageProps }: AppProps): ReactElement {
+    ...
+}
+
+export default MyApp;
+```
 
 -   Quando for usar a verificação de length no jsx, SEMPRE usar um operador de comparação. Ex:
 

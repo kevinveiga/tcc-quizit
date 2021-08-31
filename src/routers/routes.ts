@@ -1,9 +1,11 @@
 import { ComponentProps, ComponentType } from 'react';
 
-import LayoutAdmin from '../components/layout/layoutAdmin';
-import LayoutDefault from '../components/layout/layoutDefault';
+import { LayoutAdmin } from '../components/layout/layoutAdmin';
+import { LayoutDefault } from '../components/layout/layoutDefault';
+import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
 import Home from '../screens/home/home';
+import Login from '../screens/home/home';
 import * as Admin from '../screens/admin';
 
 /**
@@ -20,6 +22,7 @@ export interface IRoutes {
     layout: ComponentType<ComponentProps<any>> | ComponentType<any>;
     order?: number;
     routeLabel: string;
+    showHeader?: boolean;
     showInMenu?: boolean;
 }
 
@@ -30,6 +33,13 @@ export const routes: IRoutes[] = [
         layout: LayoutDefault,
         order: 0,
         routeLabel: 'Home'
+    },
+    {
+        authRequired: false,
+        component: Login,
+        layout: LayoutNoFooter,
+        order: 0,
+        routeLabel: 'Login'
     },
     // Minha Conta
     {
