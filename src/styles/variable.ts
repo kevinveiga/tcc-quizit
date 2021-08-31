@@ -49,10 +49,10 @@ export const variable: IVariable = {
     colorWarning: 'rgba(243, 156, 18, 1)',
 
     // Color - App
-    colorPrimary: 'rgba(30, 215, 96, 1)',
-    colorPrimaryHover: 'rgba(76, 179, 105, 1)',
-    colorSecondary: 'rgba(20, 19, 25, 1)',
-    colorSecondaryHover: 'rgba(0, 41, 63, 1)',
+    colorPrimary: 'rgba(94,139,126,1)',
+    colorPrimaryHover: 'rgba(47,93,98,1)',
+    colorSecondary: 'rgba(162,178,159,1)',
+    colorSecondaryHover: 'rgba(121,135,119,1)',
 
     // Font
     fontColor: 'rgba(30, 30, 30, 1)',

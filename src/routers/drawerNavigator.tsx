@@ -4,18 +4,18 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 
+import { displayName } from '../../app.json';
 import { useAuth } from '../contexts/auth';
 import { routes, IRoutes } from './routes';
 import { ActionType } from '../stores/action/actionType';
 
 import { ErrorBoundary } from '../components/errorBoundary/errorBoundary';
-import { Span } from '../components/text/span';
+import { Span, Title3 } from '../components/text/text';
 
 import { header } from '../styles/header';
 import { variable } from '../styles/variable';
 
 import SvgClose from '../assets/svg/svg-close.svg';
-import SvgLogo from '../assets/svg/svg-logo.svg';
 import SvgMenu from '../assets/svg/svg-menu.svg';
 import SvgMessage from '../assets/svg/svg-message.svg';
 
@@ -152,7 +152,7 @@ export function DrawerNavigator(): ReactElement {
                             headerTitle: (): ReactElement => {
                                 return (
                                     <View style={styles.logoWrapper}>
-                                        <SvgLogo height="100%" width="100%" />
+                                        <Title3>{displayName}</Title3>
                                     </View>
                                 );
                             },
@@ -162,14 +162,14 @@ export function DrawerNavigator(): ReactElement {
                                         onPress={(): any => navigation.dispatch(DrawerActions.toggleDrawer())}
                                         style={styles.drawerNavigatorLeft}
                                     >
-                                        <SvgMenu height="25px" width="25px" fill={variable.colorSecondary} />
+                                        <SvgMenu height="25px" width="25px" fill={variable.colorPrimary} />
                                     </TouchableOpacity>
                                 );
                             },
                             headerRight: (): ReactElement => {
                                 return (
                                     <TouchableOpacity onPress={(): any => navigation.navigate('Home')} style={styles.drawerNavigatorRight}>
-                                        <SvgMessage height="25px" width="25px" fill={variable.colorSecondary} />
+                                        <SvgMessage height="25px" width="25px" fill={variable.colorPrimary} />
                                     </TouchableOpacity>
                                 );
                             },

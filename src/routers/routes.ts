@@ -5,7 +5,7 @@ import { LayoutDefault } from '../components/layout/layoutDefault';
 import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
 import Home from '../screens/home/home';
-import Login from '../screens/home/home';
+import Login from '../screens/login/login';
 import * as Admin from '../screens/admin';
 
 /**
@@ -39,7 +39,8 @@ export const routes: IRoutes[] = [
         component: Login,
         layout: LayoutNoFooter,
         order: 0,
-        routeLabel: 'Login'
+        routeLabel: 'Login',
+        showHeader: false
     },
     // Minha Conta
     {

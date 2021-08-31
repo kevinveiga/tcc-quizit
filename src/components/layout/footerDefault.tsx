@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 
-import { P } from '../text/p';
+import { P } from '../text/text';
 
 import { variable } from '../../styles/variable';
 

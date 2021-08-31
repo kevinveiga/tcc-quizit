@@ -13,7 +13,7 @@ import { ActionType } from '../../stores/action/actionType';
 
 import { InputEmail, InputPassword } from '../../components/form/form';
 import { Spacer } from '../../components/layout/spacer';
-import { Title4 } from '../../components/text/title';
+import { Title1 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { inputSecondary } from '../../styles/form';
@@ -107,7 +107,7 @@ function Login(): ReactElement {
             <ScrollView>
                 <Spacer height={25} />
 
-                <Title4 textAlign="center">QUIZ IT</Title4>
+                <Title1 textAlign="center">QUIZ IT</Title1>
 
                 <Spacer />
 

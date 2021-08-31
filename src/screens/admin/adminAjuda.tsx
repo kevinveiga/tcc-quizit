@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { View } from 'react-native';
 
-import { Title2 } from '../../components/text/title';
+import { Title2 } from '../../components/text/text';
 
 import { layout } from '../../styles/layout';
 
