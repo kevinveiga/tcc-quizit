@@ -106,6 +106,12 @@ export default function DrawerNavigator(): ReactElement {
 
     // STYLE
     const styles = StyleSheet.create({
+        drawerNavigatorLeft: {
+            paddingLeft: variable.padding
+        },
+        drawerNavigatorRight: {
+            paddingRight: variable.padding
+        },
         logoWrapper: {
             alignItems: 'center',
             height: '100%',
@@ -152,14 +158,17 @@ export default function DrawerNavigator(): ReactElement {
                             },
                             headerLeft: (): ReactElement => {
                                 return (
-                                    <TouchableOpacity onPress={(): any => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                                    <TouchableOpacity
+                                        onPress={(): any => navigation.dispatch(DrawerActions.toggleDrawer())}
+                                        style={styles.drawerNavigatorLeft}
+                                    >
                                         <SvgMenu height="25px" width="25px" fill={variable.colorSecondary} />
                                     </TouchableOpacity>
                                 );
                             },
                             headerRight: (): ReactElement => {
                                 return (
-                                    <TouchableOpacity onPress={(): any => navigation.navigate('Home')}>
+                                    <TouchableOpacity onPress={(): any => navigation.navigate('Home')} style={styles.drawerNavigatorRight}>
                                         <SvgMessage height="25px" width="25px" fill={variable.colorSecondary} />
                                     </TouchableOpacity>
                                 );
@@ -171,10 +180,10 @@ export default function DrawerNavigator(): ReactElement {
                             <Layout>
                                 <ErrorBoundary>
                                     {/*
-                                    - Se o componente precisa de autenticação, verifica se está logado e exibe o componente.
-                                    - Se não estiver logado e o componente não precisa de autenticação, exibe o componente.
-                                    - Se o componente precisa de autenticação e não está logado, então não exibe o componente (null)
-                                    */}
+                                        - Se o componente precisa de autenticação, verifica se está logado e exibe o componente.
+                                        - Se não estiver logado e o componente não precisa de autenticação, exibe o componente.
+                                        - Se o componente precisa de autenticação e não está logado, então não exibe o componente (null)
+                                        */}
                                     {authRequired && status === ActionType.LOGGED_IN ? <Component /> : !authRequired ? <Component /> : null}
                                 </ErrorBoundary>
                             </Layout>
