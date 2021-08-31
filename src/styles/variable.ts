@@ -1,4 +1,6 @@
-export const variable = {
+import { IVariable } from '../interface';
+
+export const variable: IVariable = {
     // Animations
     duration: '250ms',
     durationFast: '150ms',
@@ -11,18 +13,12 @@ export const variable = {
     transitionFast: '150ms ease-in-out',
     transitionSlow: '650ms ease-in-out',
 
-    // Border
-    border: '1px solid rgba(216, 221, 225, 1)',
-    borderColor: 'rgba(216, 221, 225, 1)',
-    borderRadius: 3,
-
     // Color
     colorBlack: 'rgba(0, 0, 0, 1)',
     colorBlackTransparent1: 'rgba(0, 0, 0, 0.1)',
+    colorBlackTransparent2: 'rgba(0, 0, 0, 0.2)',
     colorBlackTransparent3: 'rgba(0, 0, 0, 0.3)',
     colorBlackTransparent5: 'rgba(0, 0, 0, 0.5)',
-    colorBlackTransparent6: 'rgba(0, 0, 0, 0.6)',
-    colorBlackTransparent8: 'rgba(0, 0, 0, 0.8)',
     colorBlue: 'rgba(0, 161, 222, 1)',
     colorBlueDark: 'rgba(0, 75, 115, 1)',
     colorGray: 'rgba(161, 161, 161, 1)',
@@ -34,14 +30,12 @@ export const variable = {
     colorGrayLight2: 'rgba(225, 225, 225, 1)',
     colorGrayLight3: 'rgba(235, 235, 235, 1)',
     colorGrayLight4: 'rgba(247, 247, 247, 1)',
-    colorGrayTransparent5: 'rgba(230, 230, 230, 0.5)',
-    colorGrayTransparent9: 'rgba(216, 221, 225, 0.9)',
     colorGreen: 'rgba(30, 215, 96, 1)',
-    colorGreenLight: 'rgba(210, 245, 220, 1)',
     colorOrange: 'rgba(251, 153, 88, 1)',
     colorPink: 'rgba(243, 49, 85, 1)',
     colorRed: 'rgba(255, 0, 0, 1)',
     colorWhite: 'rgba(255, 255, 255, 1)',
+    colorWhiteTransparent1: 'rgba(255, 255, 255, 0.1)',
     colorWhiteTransparent2: 'rgba(255, 255, 255, 0.2)',
     colorWhiteTransparent3: 'rgba(255, 255, 255, 0.3)',
     colorWhiteTransparent5: 'rgba(255, 255, 255, 0.5)',
@@ -62,6 +56,7 @@ export const variable = {
 
     // Font
     fontColor: 'rgba(30, 30, 30, 1)',
+    fontPrimary: 'opensans-regular',
     fontPrimaryBold: 'opensans-bold',
     fontPrimaryExtraBold: 'opensans-extrabold',
     fontPrimaryLight: 'opensans-light',
@@ -74,6 +69,7 @@ export const variable = {
     allButtons: 'button, input[type="button"], input[type="reset"], input[type="submit"]',
     allTextInputs: 'input[type="text"], input[type="password"], select[multiple="multiple"], textarea',
     buttonHeight: 50,
+    buttonPadding: 5,
     buttonPaddingX: 5,
     buttonPaddingY: 3,
     formBoxShadow: 'inset 0 0 0 1px rgba(225, 225, 225, 1)',
@@ -82,6 +78,8 @@ export const variable = {
     inputHeight: 50,
     inputMargin: 10,
     inputPadding: 12,
+    inputPaddingX: 12,
+    inputPaddingY: 10,
 
     // Media Screen
     xs: 540,
@@ -89,6 +87,13 @@ export const variable = {
     md: 960,
     lg: 1140,
     xl: 1600,
+
+    // Others
+    borderRadius: 3,
+    border: '1px solid rgba(216, 221, 225, 1)',
+    borderColor: 'rgba(216, 221, 225, 1)',
+    boxShadowPrimary: '0 2px 10px 0 rgba(0, 0, 0, 0.1)',
+    boxShadowSecondary: '0 2px 5px 0 rgba(0, 0, 0, 0.5)',
 
     // Space
     margin: 50,

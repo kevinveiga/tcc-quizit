@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 
 export default function StackNavigator(): ReactElement {
     return (
-        <Stack.Navigator headerMode="none" initialRouteName="Root">
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Root">
             <Stack.Screen component={DrawerNavigator} name="Root" />
         </Stack.Navigator>
     );
