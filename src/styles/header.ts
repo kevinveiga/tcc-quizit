@@ -5,8 +5,7 @@ import { variable } from './variable';
 export const header = StyleSheet.create({
     headerStyle: {
         backgroundColor: variable.colorPrimary,
-        minHeight: variable.headerHeight,
-        padding: variable.padding
+        minHeight: variable.headerHeight
     },
     headerTitleStyle: {
         color: variable.colorSecondary,
