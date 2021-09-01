@@ -1,16 +1,18 @@
-import React, { createContext, PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useReducer } from 'react';
+import React, { createContext, PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
 
 import { responseError } from '../helpers/responseError';
-import { api } from '../services/api';
-import { login, ILogin } from '../services/auth';
+import { ILogin } from '../services/auth';
 import { ActionType } from '../stores/action/actionType';
 import { IAuth, authReducer, initialState } from '../stores/reducer/auth';
 
 interface IActions {
     login(obj: ILogin): Promise<void>;
+    loginFacebook(): Promise<void>;
+    loginGoogle(): Promise<void>;
     logout(): Promise<void>;
 }
 
@@ -29,23 +31,29 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
     const [stateAuth, dispatch] = useReducer(authReducer, initialState);
 
     // STATE
-    // const [stateInitializing, setStateInitializing] = useState(true);
+    const [stateInitializing, setStateInitializing] = useState(true);
 
-    const onAuthStateChanged = useCallback((user: any): void => {
-        dispatch({ payload: user, type: user ? ActionType.LOGGED_IN : ActionType.LOGGED_OUT });
+    const onAuthStateChanged = useCallback(
+        (user: FirebaseAuthTypes.User | null): void => {
+            dispatch({ payload: user, type: user ? ActionType.LOGGED_IN : ActionType.LOGGED_OUT });
 
-        // if (stateInitializing) {
-        //     setStateInitializing(false);
-        // }
-    }, []);
+            if (stateInitializing) {
+                setStateInitializing(false);
+            }
+        },
+        [stateInitializing]
+    );
 
     // Inicia o GoogleSignin
     useEffect(() => {
-        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-
         GoogleSignin.configure({
             webClientId: '831888473895-0s1jbjqakmh0n3f1531ra32e1qt2nrd8.apps.googleusercontent.com'
         });
+    }, []);
+
+    // Quando o estado do usuário é alterado
+    useEffect(() => {
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
 
         return subscriber;
     }, [onAuthStateChanged]);
@@ -58,24 +66,77 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                     type: ActionType.ATTEMPTING
                 });
 
-                const response = await login(obj);
-
-                if (response.status === 200 && response.data?.token) {
-                    api.defaults.headers.Authorization = `Bearer ${response.data?.token as string}`;
-
-                    dispatch({
-                        payload: response.data,
-                        type: ActionType.LOGGED_IN
-                    });
-                } else {
-                    dispatch({
-                        error: response.data?.message,
-                        type: ActionType.FAILED
-                    });
-                }
+                await auth().signInWithEmailAndPassword(obj.email, obj.password);
             } catch (err) {
                 dispatch({
-                    error: responseError(err?.response?.data?.errors),
+                    error: responseError(err.code),
+                    type: ActionType.FAILED
+                });
+            }
+        },
+        loginCreate: async (obj: ILogin): Promise<void> => {
+            try {
+                dispatch({
+                    type: ActionType.ATTEMPTING
+                });
+
+                await auth().createUserWithEmailAndPassword(obj.email, obj.password);
+            } catch (err) {
+                dispatch({
+                    error: responseError(err.code),
+                    type: ActionType.FAILED
+                });
+            }
+        },
+        loginFacebook: async (): Promise<void> => {
+            try {
+                dispatch({
+                    type: ActionType.ATTEMPTING
+                });
+
+                // Attempt login with permissions
+                const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+                if (result.isCancelled) {
+                    throw 'User cancelled the login process';
+                }
+
+                // Once signed in, get the users AccesToken
+                const data = await AccessToken.getCurrentAccessToken();
+
+                if (!data) {
+                    throw 'Something went wrong obtaining access token';
+                }
+
+                // Create a Firebase credential with the AccessToken
+                const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+                // Sign-in the user with the credential
+                await auth().signInWithCredential(facebookCredential);
+            } catch (err) {
+                dispatch({
+                    error: responseError(err.code),
+                    type: ActionType.FAILED
+                });
+            }
+        },
+        loginGoogle: async (): Promise<void> => {
+            try {
+                dispatch({
+                    type: ActionType.ATTEMPTING
+                });
+
+                // Get the users ID token
+                const { idToken } = await GoogleSignin.signIn();
+
+                // Create a Google credential with the token
+                const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+                // Sign-in the user with the credential
+                await auth().signInWithCredential(googleCredential);
+            } catch (err) {
+                dispatch({
+                    error: responseError(err.code),
                     type: ActionType.FAILED
                 });
             }
@@ -85,7 +146,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 await auth().signOut();
             } catch (err) {
                 dispatch({
-                    error: `Falha ao fazer o logout: ${err as string}`,
+                    error: `Falha ao fazer o logout: ${err.code as string}`,
                     type: ActionType.FAILED
                 });
             }
@@ -93,9 +154,9 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
     };
 
     // Se está inicializando o app, então retorna vazio
-    // if (stateInitializing) {
-    //     return <></>;
-    // }
+    if (stateInitializing) {
+        return <></>;
+    }
 
     return <AuthContext.Provider value={{ stateAuth: stateAuth, actions: actions }}>{children}</AuthContext.Provider>;
 }

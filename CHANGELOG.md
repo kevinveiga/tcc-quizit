@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.0.5] - 2021-09-01 - Kevin M. Veiga
+
+### Added
+
+-   Layout de Login
+
+-   Actions de Login, LoginCreate, LoginFacebook, LoginGoogle
+
 ## [0.0.4] - 2021-08-28 - Kevin M. Veiga
 
 ### Modify

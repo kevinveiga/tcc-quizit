@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
-import { Alert, Platform, ScrollView, View } from 'react-native';
+import { Alert, Platform, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
@@ -12,8 +12,9 @@ import { IRouteParams } from '../../entities/routeParams';
 import { ActionType } from '../../stores/action/actionType';
 
 import { InputEmail, InputPassword } from '../../components/form/form';
+import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
-import { Title1 } from '../../components/text/text';
+import { P, Title1 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { inputSecondary } from '../../styles/form';
@@ -34,6 +35,16 @@ function Login(): ReactElement {
         email: '',
         password: ''
     };
+
+    // STYLE
+    const styles = StyleSheet.create({
+        buttonFacebook: {
+            backgroundColor: variable.colorBlue
+        },
+        buttonGoogle: {
+            backgroundColor: variable.colorRed
+        }
+    });
 
     // CONTEXT
     const { stateAuth, actions } = useAuth();
@@ -133,12 +144,22 @@ function Login(): ReactElement {
 
                 <Spacer height={25} />
 
+                <TouchableOpacity onPress={(): any => CommonActions.navigate({ name: 'Login' })}>
+                    <P textAlign="center">Esqueceu a senha? Clique aqui</P>
+                </TouchableOpacity>
+
+                <Spacer height={25} />
+
+                <HorizontalLine />
+
+                <Spacer height={25} />
+
                 {Platform.OS === 'android' ? (
                     <View>
                         <Button
-                            buttonStyle={button.buttonPrimary}
+                            buttonStyle={{ ...button.buttonPrimary, ...styles.buttonGoogle }}
                             disabled={status === ActionType.ATTEMPTING}
-                            onPress={(): any => formRef.current?.submitForm()}
+                            onPress={(): any => actions?.loginGoogle()}
                             title="Login Google"
                             type="solid"
                         />
@@ -146,14 +167,28 @@ function Login(): ReactElement {
                         <Spacer height={25} />
 
                         <Button
-                            buttonStyle={button.buttonPrimary}
+                            buttonStyle={{ ...button.buttonPrimary, ...styles.buttonFacebook }}
                             disabled={status === ActionType.ATTEMPTING}
-                            onPress={(): any => formRef.current?.submitForm()}
+                            onPress={(): any => actions?.loginFacebook()}
                             title="Login Facebook"
                             type="solid"
                         />
                     </View>
                 ) : null}
+
+                <Spacer height={25} />
+
+                <HorizontalLine />
+
+                <Spacer height={25} />
+
+                <TouchableOpacity onPress={(): any => CommonActions.navigate({ name: 'Login' })}>
+                    <P fontSize={20} textAlign="center">
+                        Não tem conta? Crie uma aqui
+                    </P>
+                </TouchableOpacity>
+
+                <Spacer height={25} />
             </ScrollView>
         </View>
     );
