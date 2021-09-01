@@ -55,7 +55,7 @@ export const variable: IVariable = {
     colorSecondaryHover: 'rgba(121,135,119,1)',
 
     // Font
-    fontColor: 'rgba(30, 30, 30, 1)',
+    fontColor: 'rgba(34, 34, 34, 1)',
     fontPrimary: 'opensans-regular',
     fontPrimaryBold: 'opensans-bold',
     fontPrimaryExtraBold: 'opensans-extrabold',

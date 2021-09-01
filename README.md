@@ -201,22 +201,26 @@ Melhor opção para emulador é utilizando um aparelho, seguir este link [https:
 
 -   MUITO CUIDADO ao fazer qualquer alteração dentro de "android", pode estar funcionando no emulador, mas não funcionar no APK
 
--   Primeiro executar no terminal o comando de bundle:
-    yarn run publish bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
+-   Primeiro executar no terminal:
+    cd android && ./gradlew clean && cd ..
 
-    ou para user o ENV de desenvolvimento:
-
+-   Depois executar no terminal o comando de bundle do env de desenvolvimento ou de produção:
     yarn run publish:dev bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
 
--   Versão Debug do APK, executar no terminal:
-    cd android && ./gradlew clean assembleDebug && cd ..
+    ou o ENV de produção:
+
+    yarn run publish bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
+
+-   Depois executar no terminal o comando de APK versão debug ou release:
+    Versão debug do APK:
+    cd android && ./gradlew assembleDebug && cd ..
 
     \*Obs: os arquivos de APK se encontram na pasta android/app/build/outputs/apk/debug,
     cada arquivo é para um range de versões do Android, no Moto G7, por exemplo, funcionou o arquivo
     app-armeabi-v7a-debug
 
--   Versão Release do APK, executar no terminal:
-    cd android && ./gradlew clean assembleRelease && cd ..
+    Versão release do APK:
+    cd android && ./gradlew assembleRelease && cd ..
 
     \*Obs: os arquivos de APK se encontram na pasta android/app/build/outputs/apk/release,
     cada arquivo é para um range de versões do Android, no Moto G7, por exemplo, funcionou o arquivo
