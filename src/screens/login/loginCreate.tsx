@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
-import { Alert, Platform, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
@@ -13,7 +13,6 @@ import { IFormLogin } from '../../interface';
 import { ActionType } from '../../stores/action/actionType';
 
 import { InputEmail, InputPassword } from '../../components/form/form';
-import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
 import { P, Title1 } from '../../components/text/text';
 
@@ -25,22 +24,12 @@ import { variable } from '../../styles/variable';
 import SvgKey from '../../assets/svg/svg-key.svg';
 import SvgUser from '../../assets/svg/svg-user.svg';
 
-function Login(): ReactElement {
+function LoginCreate(): ReactElement {
     // VARIABLE
     const initialData: IFormLogin = {
         email: '',
         password: ''
     };
-
-    // STYLE
-    const styles = StyleSheet.create({
-        buttonFacebook: {
-            backgroundColor: variable.colorBlue
-        },
-        buttonGoogle: {
-            backgroundColor: variable.colorRed
-        }
-    });
 
     // CONTEXT
     const { stateAuth, actions } = useAuth();
@@ -78,7 +67,7 @@ function Login(): ReactElement {
                     abortEarly: false
                 })
                 .then(() => {
-                    actions?.login(data).catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]));
+                    actions?.loginCreate(data).catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]));
                 });
 
             formRef.current?.setErrors({});
@@ -133,50 +122,8 @@ function Login(): ReactElement {
                 <Spacer height={25} />
 
                 <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Login' }))}>
-                    <P textAlign="center">Esqueceu a senha? Clique aqui</P>
-                </TouchableOpacity>
-
-                <Spacer height={25} />
-
-                <HorizontalLine />
-
-                <Spacer height={25} />
-
-                {Platform.OS === 'android' ? (
-                    <View>
-                        <Button
-                            buttonStyle={{ ...button.buttonPrimary, ...styles.buttonGoogle }}
-                            disabled={status === ActionType.ATTEMPTING}
-                            onPress={(): any =>
-                                actions?.loginGoogle().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
-                            }
-                            title="Login Google"
-                            type="solid"
-                        />
-
-                        <Spacer height={25} />
-
-                        <Button
-                            buttonStyle={{ ...button.buttonPrimary, ...styles.buttonFacebook }}
-                            disabled={status === ActionType.ATTEMPTING}
-                            onPress={(): any =>
-                                actions?.loginFacebook().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
-                            }
-                            title="Login Facebook"
-                            type="solid"
-                        />
-                    </View>
-                ) : null}
-
-                <Spacer height={25} />
-
-                <HorizontalLine />
-
-                <Spacer height={25} />
-
-                <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Criar Login' }))}>
                     <P fontSize={20} textAlign="center">
-                        Não tem conta? Crie uma aqui
+                        Tem uma conta? Clique aqui
                     </P>
                 </TouchableOpacity>
 
@@ -186,4 +133,4 @@ function Login(): ReactElement {
     );
 }
 
-export default Login;
+export default LoginCreate;

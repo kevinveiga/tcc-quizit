@@ -6,6 +6,7 @@ import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
 import Ajuda from '../screens/ajuda/ajuda';
 import Login from '../screens/login/login';
+import LoginCreate from '../screens/login/loginCreate';
 import * as Admin from '../screens/admin';
 
 /**
@@ -40,6 +41,14 @@ export const routes: IRoutes[] = [
         layout: LayoutNoFooter,
         order: 0,
         routeLabel: 'Login',
+        showHeader: false
+    },
+    {
+        authRequired: false,
+        component: LoginCreate,
+        layout: LayoutNoFooter,
+        order: 0,
+        routeLabel: 'Criar Login',
         showHeader: false
     },
     // Admin

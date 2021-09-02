@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.0.6] - 2021-09-02 - Kevin M. Veiga
+
+### Added
+
+-   Tela de criar login
+
+### Fix
+
+-   Tratamento de erros
+
 ## [0.0.5] - 2021-09-01 - Kevin M. Veiga
 
 ### Added

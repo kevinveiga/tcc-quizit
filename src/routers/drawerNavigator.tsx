@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
@@ -83,9 +83,12 @@ function MenuDrawerContent({ descriptors, navigation, state, props }: any): Reac
                     <DrawerItem
                         label="Logout"
                         onPress={(): any => {
-                            actions?.logout()?.then(() => {
-                                navigation.navigate('Login');
-                            });
+                            actions
+                                ?.logout()
+                                .then(() => {
+                                    navigation.navigate('Login');
+                                })
+                                .catch((logoutError) => Alert.alert('Erro:', logoutError.toString(), [{ text: 'Fechar' }]));
                         }}
                     />
                 )}

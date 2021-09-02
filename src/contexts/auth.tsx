@@ -11,6 +11,7 @@ import { IAuth, authReducer, initialState } from '../stores/reducer/auth';
 
 interface IActions {
     login(obj: ILogin): Promise<void>;
+    loginCreate(obj: ILogin): Promise<void>;
     loginFacebook(): Promise<void>;
     loginGoogle(): Promise<void>;
     logout(): Promise<void>;
@@ -69,9 +70,11 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 await auth().signInWithEmailAndPassword(obj.email, obj.password);
             } catch (err) {
                 dispatch({
-                    error: responseError(err.code),
+                    error: err.code.toString(),
                     type: ActionType.FAILED
                 });
+
+                throw new Error(err.code);
             }
         },
         loginCreate: async (obj: ILogin): Promise<void> => {
@@ -83,9 +86,11 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 await auth().createUserWithEmailAndPassword(obj.email, obj.password);
             } catch (err) {
                 dispatch({
-                    error: responseError(err.code),
+                    error: err.code.toString(),
                     type: ActionType.FAILED
                 });
+
+                throw new Error(err.code);
             }
         },
         loginFacebook: async (): Promise<void> => {
@@ -115,9 +120,11 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 await auth().signInWithCredential(facebookCredential);
             } catch (err) {
                 dispatch({
-                    error: responseError(err.code),
+                    error: err.code.toString(),
                     type: ActionType.FAILED
                 });
+
+                throw new Error(err.code);
             }
         },
         loginGoogle: async (): Promise<void> => {
@@ -136,9 +143,11 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 await auth().signInWithCredential(googleCredential);
             } catch (err) {
                 dispatch({
-                    error: responseError(err.code),
+                    error: err.code.toString(),
                     type: ActionType.FAILED
                 });
+
+                throw new Error(err.code);
             }
         },
         logout: async (): Promise<void> => {
@@ -149,6 +158,8 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                     error: `Falha ao fazer o logout: ${err.code as string}`,
                     type: ActionType.FAILED
                 });
+
+                throw new Error(err.code);
             }
         }
     };

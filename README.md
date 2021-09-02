@@ -408,6 +408,14 @@ stateLista.length > 0;
 
 -   Evitar utilizar estilos no componente de ScrollView, neste componente algumas propriedades não funcionam
 
+#### **AUTENTICAÇÃO**
+
+-   [Autenticação](https://www.youtube.com/watch?v=J7pkSP18Oko&ab_channel=PradipDebnath)
+
+-   [Autenticação do Facebook](https://www.youtube.com/watch?v=pDLo7Pfcvfk&ab_channel=PradipDebnath)
+
+-   [Autenticação do Google](https://rnfirebase.io/auth/social-auth)
+
 #### **FONTS**
 
 -   [Custom fonts](https://mehrankhandev.medium.com/ultimate-guide-to-use-custom-fonts-in-react-native-77fcdf859cf4)
@@ -417,12 +425,6 @@ stateLista.length > 0;
 -   [Unform](https://unform.dev)
 
 -   [Unform - Vídeo](https://www.youtube.com/watch?v=P65RJTTqkN4&ab_channel=Rocketseat)
-
-#### **LOGINS**
-
--   [Login do Google](https://rnfirebase.io/auth/social-auth)
-
--   [Login do Facebook](https://www.youtube.com/watch?v=pDLo7Pfcvfk&ab_channel=PradipDebnath)
 
 #### **NAVIGATION**
 

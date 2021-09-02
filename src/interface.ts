@@ -1,3 +1,8 @@
+export interface IFormLogin {
+    email: string;
+    password: string;
+}
+
 export interface IVariable {
     [key: string]: string | number;
 
