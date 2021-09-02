@@ -4,7 +4,6 @@ import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-import { responseError } from '../helpers/responseError';
 import { ILogin } from '../services/auth';
 import { ActionType } from '../stores/action/actionType';
 import { IAuth, authReducer, initialState } from '../stores/reducer/auth';
