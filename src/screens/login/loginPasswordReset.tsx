@@ -57,7 +57,11 @@ function LoginPasswordReset(): ReactElement {
                 .then(() => {
                     actions
                         ?.loginPasswordReset(data.email)
-                        .then(() => Alert.alert('Alteração de senha:', 'Foi enviado um e-mail para você alterar sua senha', [{ text: 'Fechar' }]))
+                        .then(() =>
+                            Alert.alert('Alteração de senha:', 'Foi enviado um e-mail, verifique sua caixa de e-mail, inclusive a caixa de span.', [
+                                { text: 'Fechar' }
+                            ])
+                        )
                         .catch((loginPasswordResetError) => Alert.alert('Erro:', loginPasswordResetError.toString(), [{ text: 'Fechar' }]));
                 });
 
