@@ -1,6 +1,11 @@
 export interface IFormLogin {
     email: string;
     password: string;
+    passwordConfirm?: string;
+}
+
+export interface ILoginPasswordReset {
+    email: string;
 }
 
 export interface IVariable {

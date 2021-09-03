@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
-import { Alert, Platform, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, Platform, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
@@ -15,7 +15,7 @@ import { ActionType } from '../../stores/action/actionType';
 import { InputEmail, InputPassword } from '../../components/form/form';
 import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
-import { P, Title1 } from '../../components/text/text';
+import { P, Title1, Title2 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { inputSecondary } from '../../styles/form';
@@ -39,6 +39,10 @@ function Login(): ReactElement {
         },
         buttonGoogle: {
             backgroundColor: variable.colorRed
+        },
+        login: {
+            minHeight: Dimensions.get('window').height - 100,
+            justifyContent: 'center'
         }
     });
 
@@ -98,89 +102,101 @@ function Login(): ReactElement {
     return (
         <View style={{ ...layout.container }}>
             <ScrollView>
-                <Spacer height={25} />
+                <View style={styles.login}>
+                    <Spacer height={25} />
 
-                <Title1 textAlign="center">QUIZ IT</Title1>
+                    <Title1 textAlign="center">QUIZ IT</Title1>
 
-                <Spacer height={25} />
+                    <Spacer height={25} />
 
-                <View>
-                    <Form initialData={initialData} onSubmit={handleSubmit} ref={formRef}>
-                        <View>
+                    <Title2 textAlign="center">Login</Title2>
+
+                    <Spacer height={25} />
+
+                    <View>
+                        <Form initialData={initialData} onSubmit={handleSubmit} ref={formRef}>
                             <View>
-                                <InputEmail leftIcon={<SvgUser height="25px" width="25px" fill={variable.colorPrimary} />} theme={inputSecondary} />
+                                <View>
+                                    <InputEmail
+                                        leftIcon={<SvgUser height="25px" width="25px" fill={variable.colorPrimary} />}
+                                        theme={inputSecondary}
+                                    />
+                                </View>
                             </View>
-                        </View>
 
-                        <View>
                             <View>
-                                <InputPassword leftIcon={<SvgKey height="25px" width="25px" fill={variable.colorPrimary} />} theme={inputSecondary} />
+                                <View>
+                                    <InputPassword
+                                        leftIcon={<SvgKey height="25px" width="25px" fill={variable.colorPrimary} />}
+                                        theme={inputSecondary}
+                                    />
+                                </View>
                             </View>
-                        </View>
 
+                            <View>
+                                <Button
+                                    buttonStyle={button.buttonPrimary}
+                                    disabled={status === ActionType.ATTEMPTING}
+                                    onPress={(): any => formRef.current?.submitForm()}
+                                    title="Entrar"
+                                    type="solid"
+                                />
+                            </View>
+                        </Form>
+                    </View>
+
+                    <Spacer height={25} />
+
+                    <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Esqueci a senha' }))}>
+                        <P textAlign="center">Esqueceu a senha? Clique aqui</P>
+                    </TouchableOpacity>
+
+                    <Spacer height={25} />
+
+                    <HorizontalLine />
+
+                    <Spacer height={25} />
+
+                    {Platform.OS === 'android' ? (
                         <View>
                             <Button
-                                buttonStyle={button.buttonPrimary}
+                                buttonStyle={{ ...button.buttonPrimary, ...styles.buttonGoogle }}
                                 disabled={status === ActionType.ATTEMPTING}
-                                onPress={(): any => formRef.current?.submitForm()}
-                                title="Entrar"
+                                onPress={(): any =>
+                                    actions?.loginGoogle().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
+                                }
+                                title="Login Google"
+                                type="solid"
+                            />
+
+                            <Spacer height={25} />
+
+                            <Button
+                                buttonStyle={{ ...button.buttonPrimary, ...styles.buttonFacebook }}
+                                disabled={status === ActionType.ATTEMPTING}
+                                onPress={(): any =>
+                                    actions?.loginFacebook().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
+                                }
+                                title="Login Facebook"
                                 type="solid"
                             />
                         </View>
-                    </Form>
+                    ) : null}
+
+                    <Spacer height={25} />
+
+                    <HorizontalLine />
+
+                    <Spacer height={25} />
+
+                    <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Criar Login' }))}>
+                        <P fontSize={20} textAlign="center">
+                            Não tem conta? Crie uma aqui
+                        </P>
+                    </TouchableOpacity>
+
+                    <Spacer height={25} />
                 </View>
-
-                <Spacer height={25} />
-
-                <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Login' }))}>
-                    <P textAlign="center">Esqueceu a senha? Clique aqui</P>
-                </TouchableOpacity>
-
-                <Spacer height={25} />
-
-                <HorizontalLine />
-
-                <Spacer height={25} />
-
-                {Platform.OS === 'android' ? (
-                    <View>
-                        <Button
-                            buttonStyle={{ ...button.buttonPrimary, ...styles.buttonGoogle }}
-                            disabled={status === ActionType.ATTEMPTING}
-                            onPress={(): any =>
-                                actions?.loginGoogle().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
-                            }
-                            title="Login Google"
-                            type="solid"
-                        />
-
-                        <Spacer height={25} />
-
-                        <Button
-                            buttonStyle={{ ...button.buttonPrimary, ...styles.buttonFacebook }}
-                            disabled={status === ActionType.ATTEMPTING}
-                            onPress={(): any =>
-                                actions?.loginFacebook().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
-                            }
-                            title="Login Facebook"
-                            type="solid"
-                        />
-                    </View>
-                ) : null}
-
-                <Spacer height={25} />
-
-                <HorizontalLine />
-
-                <Spacer height={25} />
-
-                <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Criar Login' }))}>
-                    <P fontSize={20} textAlign="center">
-                        Não tem conta? Crie uma aqui
-                    </P>
-                </TouchableOpacity>
-
-                <Spacer height={25} />
             </ScrollView>
         </View>
     );

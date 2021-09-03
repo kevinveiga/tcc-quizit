@@ -1,6 +1,14 @@
 import * as Yup from 'yup';
 
 Yup.setLocale({
+    array: {
+        max: 'Deve ter no máximo ${max} itens',
+        min: 'Deve ter no mínimo ${min} itens'
+    },
+    date: {
+        max: 'Deve ser menor que a data ${max}',
+        min: 'Deve ser maior que a data ${min}'
+    },
     mixed: {
         default: 'Não é válido',
         required: 'Campo obrigatório',
@@ -26,14 +34,6 @@ Yup.setLocale({
         trim: 'Não deve conter espaços no início ou no fim.',
         url: 'Deve ter um formato de URL válida',
         uppercase: 'Deve estar em minúsculo'
-    },
-    date: {
-        max: 'Deve ser menor que a data ${max}',
-        min: 'Deve ser maior que a data ${min}'
-    },
-    array: {
-        max: 'Deve ter no máximo ${max} itens',
-        min: 'Deve ter no mínimo ${min} itens'
     }
 });
 

@@ -158,6 +158,12 @@ export function InputDefault({
         registerField<string>({
             name: fieldName,
             ref: inputRef.current,
+            clearValue: () => {
+                if (inputRef.current) {
+                    inputRef.current.setNativeProps({ text: '' });
+                    inputRef.current.value = '';
+                }
+            },
             getValue: () => {
                 if (inputRef.current) {
                     return inputRef.current.value;
@@ -169,12 +175,6 @@ export function InputDefault({
                 if (inputRef.current) {
                     inputRef.current.setNativeProps({ text: value });
                     inputRef.current.value = value;
-                }
-            },
-            clearValue: () => {
-                if (inputRef.current) {
-                    inputRef.current.setNativeProps({ text: '' });
-                    inputRef.current.value = '';
                 }
             }
         });
@@ -240,6 +240,12 @@ export function InputEmail({
         registerField<string>({
             name: fieldName,
             ref: inputRef.current,
+            clearValue: () => {
+                if (inputRef.current) {
+                    inputRef.current.setNativeProps({ text: '' });
+                    inputRef.current.value = '';
+                }
+            },
             getValue: () => {
                 if (inputRef.current) {
                     return inputRef.current.value;
@@ -251,12 +257,6 @@ export function InputEmail({
                 if (inputRef.current) {
                     inputRef.current.setNativeProps({ text: value });
                     inputRef.current.value = value;
-                }
-            },
-            clearValue: () => {
-                if (inputRef.current) {
-                    inputRef.current.setNativeProps({ text: '' });
-                    inputRef.current.value = '';
                 }
             }
         });
@@ -324,6 +324,12 @@ export function InputPassword({
         registerField<string>({
             name: fieldName,
             ref: inputRef.current,
+            clearValue() {
+                if (inputRef.current) {
+                    inputRef.current.setNativeProps({ text: '' });
+                    inputRef.current.value = '';
+                }
+            },
             getValue() {
                 if (inputRef.current) {
                     return inputRef.current.value;
@@ -336,11 +342,90 @@ export function InputPassword({
                     inputRef.current.setNativeProps({ text: value });
                     inputRef.current.value = value;
                 }
-            },
+            }
+        });
+    }, [fieldName, registerField]);
+
+    const handleChangeText = useCallback(
+        (value: string) => {
+            if (inputRef.current) {
+                inputRef.current.value = value;
+            }
+
+            if (onChangeText) {
+                onChangeText(value);
+            }
+        },
+        [onChangeText]
+    );
+
+    return (
+        <Input
+            autoCapitalize="none"
+            autoCompleteType="password"
+            containerStyle={theme.containerStyle}
+            errorStyle={{ color: variable.colorAlert }}
+            errorMessage={error && error}
+            inputStyle={theme.inputStyle}
+            keyboardType="default"
+            label={label}
+            leftIcon={leftIcon}
+            leftIconContainerStyle={theme.leftIconContainerStyle}
+            maxLength={maxLength}
+            onChangeText={handleChangeText}
+            placeholder={placeholder}
+            ref={inputRef}
+            rightIcon={rightIcon}
+            secureTextEntry={true}
+            textContentType="password"
+            defaultValue={defaultValue}
+            {...props}
+        />
+    );
+}
+
+export function InputPasswordConfirm({
+    label,
+    leftIcon,
+    maxLength = 30,
+    name = 'passwordConfirm',
+    onChangeText,
+    placeholder = 'Confirmar senha',
+    rightIcon,
+    theme = inputPrimary,
+    ...props
+}: IInput): ReactElement {
+    const inputRef = useRef<IInputReference>(null);
+
+    const { defaultValue, error, fieldName, registerField } = useField(name);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.value = defaultValue;
+        }
+    }, [defaultValue]);
+
+    useEffect(() => {
+        registerField<string>({
+            name: fieldName,
+            ref: inputRef.current,
             clearValue() {
                 if (inputRef.current) {
                     inputRef.current.setNativeProps({ text: '' });
                     inputRef.current.value = '';
+                }
+            },
+            getValue() {
+                if (inputRef.current) {
+                    return inputRef.current.value;
+                }
+
+                return '';
+            },
+            setValue(ref, value) {
+                if (inputRef.current) {
+                    inputRef.current.setNativeProps({ text: value });
+                    inputRef.current.value = value;
                 }
             }
         });

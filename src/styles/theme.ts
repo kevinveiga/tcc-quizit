@@ -76,6 +76,7 @@ interface ITheme {
 }
 
 export const theme: ITheme = {
+    // React Elements
     Avatar: {
         rounded: true
     },
@@ -130,6 +131,7 @@ export const theme: ITheme = {
             fontSize: variable.fontSize
         }
     },
+    // Others
     colors: {
         primary: variable.colorPrimary,
         secondary: variable.colorSecondary

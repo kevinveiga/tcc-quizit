@@ -92,7 +92,7 @@ export function Span({ bold = false, children, color, fontSize, textDecorationLi
     return <Text style={styles.span}>{children}</Text>;
 }
 
-export function Title1({ bold = true, children, color, fontSize = 30, textAlign, textDecorationLine }: ITitle): ReactElement {
+export function Title1({ bold = true, children, color, fontSize = 32, textAlign, textDecorationLine }: ITitle): ReactElement {
     const styleObj: { [key: string]: any } = {
         color: color,
         fontFamily: bold ? variable.fontPrimaryBold : variable.fontPrimaryRegular,

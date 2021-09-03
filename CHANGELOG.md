@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.0.7] - 2021-09-03 - Kevin M. Veiga
+
+### Added
+
+-   Confirmar senha
+
+-   Reiniciar senha
+
 ## [0.0.6] - 2021-09-02 - Kevin M. Veiga
 
 ### Added

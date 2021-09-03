@@ -57,7 +57,7 @@ function MenuDrawerContent({ descriptors, navigation, state, props }: any): Reac
                                 <DrawerItem
                                     activeTintColor={activeTintColor || variable.colorPrimary}
                                     focused={state.routes.findIndex((e: any) => e.name === routeLabel) === state.index}
-                                    inactiveTintColor={inactiveTintColor || variable.colorSecondary}
+                                    inactiveTintColor={inactiveTintColor || variable.fontColor}
                                     key={key}
                                     label={({ color }): ReactElement => <Span color={color}>{drawerLabel}</Span>}
                                     onPress={(): void => navigation.navigate(routeLabel)}
@@ -70,7 +70,7 @@ function MenuDrawerContent({ descriptors, navigation, state, props }: any): Reac
                                 <DrawerItem
                                     activeTintColor={activeTintColor || variable.colorPrimary}
                                     focused={state.routes.findIndex((e: any) => e.name === routeLabel) === state.index}
-                                    inactiveTintColor={inactiveTintColor || variable.colorSecondary}
+                                    inactiveTintColor={inactiveTintColor || variable.fontColor}
                                     key={key}
                                     label={({ color }): ReactElement => <Span color={color}>{drawerLabel}</Span>}
                                     onPress={(): void => navigation.navigate(routeLabel)}
@@ -81,7 +81,7 @@ function MenuDrawerContent({ descriptors, navigation, state, props }: any): Reac
 
                 {status === ActionType.LOGGED_IN && (
                     <DrawerItem
-                        label="Logout"
+                        label={(): ReactElement => <Span>Logout</Span>}
                         onPress={(): any => {
                             actions
                                 ?.logout()

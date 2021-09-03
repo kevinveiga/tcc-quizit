@@ -13,6 +13,7 @@ interface IActions {
     loginCreate(obj: ILogin): Promise<void>;
     loginFacebook(): Promise<void>;
     loginGoogle(): Promise<void>;
+    loginPasswordReset(email: string): Promise<void>;
     logout(): Promise<void>;
 }
 
@@ -140,6 +141,18 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
 
                 // Sign-in the user with the credential
                 await auth().signInWithCredential(googleCredential);
+            } catch (err) {
+                dispatch({
+                    error: err.code.toString(),
+                    type: ActionType.FAILED
+                });
+
+                throw new Error(err.code);
+            }
+        },
+        loginPasswordReset: async (email: string): Promise<void> => {
+            try {
+                await auth().sendPasswordResetEmail(email);
             } catch (err) {
                 dispatch({
                     error: err.code.toString(),

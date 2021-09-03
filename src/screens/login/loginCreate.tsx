@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
-import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
@@ -12,9 +12,9 @@ import Yup from '../../helpers/yup';
 import { IFormLogin } from '../../interface';
 import { ActionType } from '../../stores/action/actionType';
 
-import { InputEmail, InputPassword } from '../../components/form/form';
+import { InputEmail, InputPassword, InputPasswordConfirm } from '../../components/form/form';
 import { Spacer } from '../../components/layout/spacer';
-import { P, Title1 } from '../../components/text/text';
+import { P, Title1, Title2 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { inputSecondary } from '../../styles/form';
@@ -28,8 +28,17 @@ function LoginCreate(): ReactElement {
     // VARIABLE
     const initialData: IFormLogin = {
         email: '',
-        password: ''
+        password: '',
+        passwordConfirm: ''
     };
+
+    // STYLE
+    const styles = StyleSheet.create({
+        loginCreate: {
+            minHeight: Dimensions.get('window').height - 100,
+            justifyContent: 'center'
+        }
+    });
 
     // CONTEXT
     const { stateAuth, actions } = useAuth();
@@ -59,7 +68,8 @@ function LoginCreate(): ReactElement {
         try {
             const schema = Yup.object().shape({
                 email: Yup.string().email().required(),
-                password: Yup.string().min(6).required()
+                password: Yup.string().min(6).required(),
+                passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Confirmar senha não está igual')
             });
 
             await schema
@@ -67,7 +77,7 @@ function LoginCreate(): ReactElement {
                     abortEarly: false
                 })
                 .then(() => {
-                    actions?.loginCreate(data).catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]));
+                    actions?.loginCreate(data).catch((loginCreateError) => Alert.alert('Erro:', loginCreateError.toString(), [{ text: 'Fechar' }]));
                 });
 
             formRef.current?.setErrors({});
@@ -87,47 +97,68 @@ function LoginCreate(): ReactElement {
     return (
         <View style={{ ...layout.container }}>
             <ScrollView>
-                <Spacer height={25} />
+                <View style={styles.loginCreate}>
+                    <Spacer height={25} />
 
-                <Title1 textAlign="center">QUIZ IT</Title1>
+                    <Title1 textAlign="center">QUIZ IT</Title1>
 
-                <Spacer height={25} />
+                    <Spacer height={25} />
 
-                <View>
-                    <Form initialData={initialData} onSubmit={handleSubmit} ref={formRef}>
-                        <View>
+                    <Title2 textAlign="center">Criar login</Title2>
+
+                    <Spacer height={25} />
+
+                    <View>
+                        <Form initialData={initialData} onSubmit={handleSubmit} ref={formRef}>
                             <View>
-                                <InputEmail leftIcon={<SvgUser height="25px" width="25px" fill={variable.colorPrimary} />} theme={inputSecondary} />
+                                <View>
+                                    <InputEmail
+                                        leftIcon={<SvgUser height="25px" width="25px" fill={variable.colorPrimary} />}
+                                        theme={inputSecondary}
+                                    />
+                                </View>
                             </View>
-                        </View>
 
-                        <View>
                             <View>
-                                <InputPassword leftIcon={<SvgKey height="25px" width="25px" fill={variable.colorPrimary} />} theme={inputSecondary} />
+                                <View>
+                                    <InputPassword
+                                        leftIcon={<SvgKey height="25px" width="25px" fill={variable.colorPrimary} />}
+                                        theme={inputSecondary}
+                                    />
+                                </View>
                             </View>
-                        </View>
 
-                        <View>
-                            <Button
-                                buttonStyle={button.buttonPrimary}
-                                disabled={status === ActionType.ATTEMPTING}
-                                onPress={(): any => formRef.current?.submitForm()}
-                                title="Entrar"
-                                type="solid"
-                            />
-                        </View>
-                    </Form>
+                            <View>
+                                <View>
+                                    <InputPasswordConfirm
+                                        leftIcon={<SvgKey height="25px" width="25px" fill={variable.colorPrimary} />}
+                                        theme={inputSecondary}
+                                    />
+                                </View>
+                            </View>
+
+                            <View>
+                                <Button
+                                    buttonStyle={button.buttonPrimary}
+                                    disabled={status === ActionType.ATTEMPTING}
+                                    onPress={(): any => formRef.current?.submitForm()}
+                                    title="Criar login"
+                                    type="solid"
+                                />
+                            </View>
+                        </Form>
+                    </View>
+
+                    <Spacer height={25} />
+
+                    <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Login' }))}>
+                        <P fontSize={20} textAlign="center">
+                            Tem uma conta? Clique aqui
+                        </P>
+                    </TouchableOpacity>
+
+                    <Spacer height={25} />
                 </View>
-
-                <Spacer height={25} />
-
-                <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Login' }))}>
-                    <P fontSize={20} textAlign="center">
-                        Tem uma conta? Clique aqui
-                    </P>
-                </TouchableOpacity>
-
-                <Spacer height={25} />
             </ScrollView>
         </View>
     );
