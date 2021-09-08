@@ -38,6 +38,8 @@ yarn-error.log*
 yarn.lock*
 
 # Android
+android/app/src/main/assets/index.android.bundle
+build/
 *.hmap
 *.hprof
 *.iml
@@ -49,15 +51,14 @@ yarn.lock*
 *.perspectivev3
 *.xccheckout
 *.xcuserstate
-build/
-.gradle
-DerivedData
-local.properties
-xcuserdata
 !default.mode1v3
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+.gradle
+DerivedData
+local.properties
+xcuserdata
 
 # Buck
 buck-out/
