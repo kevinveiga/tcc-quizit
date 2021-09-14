@@ -81,7 +81,7 @@ function LoginCreate(): ReactElement {
                 });
 
             formRef.current?.setErrors({});
-        } catch (err) {
+        } catch (err: any) {
             if (err instanceof Yup.ValidationError) {
                 const errorMessages: { [key: string]: any } = {};
 

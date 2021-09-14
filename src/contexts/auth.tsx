@@ -68,7 +68,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 await auth().signInWithEmailAndPassword(obj.email, obj.password);
-            } catch (err) {
+            } catch (err: any) {
                 dispatch({
                     error: err.code.toString(),
                     type: ActionType.FAILED
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 await auth().createUserWithEmailAndPassword(obj.email, obj.password);
-            } catch (err) {
+            } catch (err: any) {
                 dispatch({
                     error: err.code.toString(),
                     type: ActionType.FAILED
@@ -118,7 +118,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
 
                 // Sign-in the user with the credential
                 await auth().signInWithCredential(facebookCredential);
-            } catch (err) {
+            } catch (err: any) {
                 dispatch({
                     error: err.code.toString(),
                     type: ActionType.FAILED
@@ -141,7 +141,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
 
                 // Sign-in the user with the credential
                 await auth().signInWithCredential(googleCredential);
-            } catch (err) {
+            } catch (err: any) {
                 dispatch({
                     error: err.code.toString(),
                     type: ActionType.FAILED
@@ -153,7 +153,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
         loginPasswordReset: async (email: string): Promise<void> => {
             try {
                 await auth().sendPasswordResetEmail(email);
-            } catch (err) {
+            } catch (err: any) {
                 dispatch({
                     error: err.code.toString(),
                     type: ActionType.FAILED
@@ -165,7 +165,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
         logout: async (): Promise<void> => {
             try {
                 await auth().signOut();
-            } catch (err) {
+            } catch (err: any) {
                 dispatch({
                     error: `Falha ao fazer o logout: ${err.code as string}`,
                     type: ActionType.FAILED
