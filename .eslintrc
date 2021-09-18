@@ -9,6 +9,7 @@
     "extends": [
         "@react-native-community",
         "eslint:recommended",
+        "eslint-config-prettier",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:jsx-a11y/recommended",
