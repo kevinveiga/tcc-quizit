@@ -1,5 +1,10 @@
 ## **App Quiz IT**
 
+### **ADMIN**
+
+-   user: admin@admin.com
+-   password: admin123
+
 ### **REQUISITOS DO PROJETO**
 
 #### **GIT**

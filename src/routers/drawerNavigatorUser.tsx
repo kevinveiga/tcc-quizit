@@ -6,7 +6,8 @@ import { CommonActions, DrawerActions, useNavigation } from '@react-navigation/n
 
 import { displayName } from '../../app.json';
 import { useAuth } from '../contexts/auth';
-import { routes, IRoutes } from './routes';
+import { IRoutes } from '../interface';
+import { routes, routesUser } from './routes';
 import { ActionType } from '../stores/action/actionType';
 
 import { ErrorBoundary } from '../components/errorBoundary/errorBoundary';
@@ -45,7 +46,7 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
     return (
         <>
             <DrawerContentScrollView {...props}>
-                {routes
+                {routesUser
                     .sort((a, b) => {
                         return (a.order || 0) - (b.order || 0);
                     })
@@ -104,10 +105,7 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
     );
 }
 
-export function DrawerNavigator(): ReactElement {
-    // VARIABLE
-    const messageNumberWrapSize = 15;
-
+export function DrawerNavigatorUser(): ReactElement {
     // STYLE
     const styles = StyleSheet.create({
         drawerNavigatorLeft: {
@@ -115,17 +113,6 @@ export function DrawerNavigator(): ReactElement {
         },
         drawerNavigatorRight: {
             paddingRight: variable.padding
-        },
-        messageNumberWarp: {
-            alignItems: 'center',
-            backgroundColor: variable.colorWhite,
-            borderRadius: messageNumberWrapSize,
-            height: messageNumberWrapSize,
-            justifyContent: 'center',
-            position: 'absolute',
-            right: -2,
-            top: -2,
-            width: messageNumberWrapSize
         }
     });
 
@@ -139,68 +126,70 @@ export function DrawerNavigator(): ReactElement {
     return (
         <Drawer.Navigator
             drawerContent={(props): ReactElement => <MenuDrawerContent {...props} />}
-            initialRouteName={status === ActionType.LOGGED_IN ? 'Admin' : 'Login'}
+            initialRouteName={status === ActionType.LOGGED_IN ? 'Usuario' : 'Login'}
             screenOptions={{ ...header, headerTitleAlign: 'center' }}
         >
-            {routes.map(({ authRequired = true, component: Component, layout: Layout, routeLabel, showHeader = true }: IRoutes) => {
-                return (
-                    <Drawer.Screen
-                        key={routeLabel}
-                        name={routeLabel}
-                        options={(): DrawerNavigationOptions => ({
-                            drawerLabel: routeLabel,
-                            headerTitle: (): ReactElement => {
-                                return (
-                                    <View>
-                                        <Title3>{displayName}</Title3>
-                                    </View>
-                                );
-                            },
-                            headerLeft: (): ReactElement => {
-                                return (
-                                    <TouchableOpacity
-                                        onPress={(): any => navigation.dispatch(DrawerActions.toggleDrawer())}
-                                        style={styles.drawerNavigatorLeft}
-                                    >
-                                        <SvgMenu height="25px" width="25px" fill={variable.colorPrimary} />
-                                    </TouchableOpacity>
-                                );
-                            },
-                            headerRight: (): ReactElement => {
-                                return (
-                                    <TouchableOpacity
-                                        onPress={(): any =>
-                                            actions
-                                                ?.logout()
-                                                .then(() => {
-                                                    navigation.dispatch(CommonActions.navigate({ name: 'Login' }));
-                                                })
-                                                .catch((logoutError) => Alert.alert('Erro:', logoutError.toString(), [{ text: 'Fechar' }]))
-                                        }
-                                        style={styles.drawerNavigatorRight}
-                                    >
-                                        <SvgUser height="25px" width="25px" fill={variable.colorPrimary} />
-                                    </TouchableOpacity>
-                                );
-                            },
-                            headerShown: showHeader
-                        })}
-                    >
-                        {(): ReactElement => (
-                            <Layout>
-                                <ErrorBoundary>
-                                    {/*
+            {[...routes, ...routesUser].map(
+                ({ authRequired = true, component: Component, layout: Layout, routeLabel, showHeader = true }: IRoutes) => {
+                    return (
+                        <Drawer.Screen
+                            key={routeLabel}
+                            name={routeLabel}
+                            options={(): DrawerNavigationOptions => ({
+                                drawerLabel: routeLabel,
+                                headerTitle: (): ReactElement => {
+                                    return (
+                                        <View>
+                                            <Title3>{displayName}</Title3>
+                                        </View>
+                                    );
+                                },
+                                headerLeft: (): ReactElement => {
+                                    return (
+                                        <TouchableOpacity
+                                            onPress={(): any => navigation.dispatch(DrawerActions.toggleDrawer())}
+                                            style={styles.drawerNavigatorLeft}
+                                        >
+                                            <SvgMenu height="25px" width="25px" fill={variable.colorPrimary} />
+                                        </TouchableOpacity>
+                                    );
+                                },
+                                headerRight: (): ReactElement => {
+                                    return (
+                                        <TouchableOpacity
+                                            onPress={(): any =>
+                                                actions
+                                                    ?.logout()
+                                                    .then(() => {
+                                                        navigation.dispatch(CommonActions.navigate({ name: 'Login' }));
+                                                    })
+                                                    .catch((logoutError) => Alert.alert('Erro:', logoutError.toString(), [{ text: 'Fechar' }]))
+                                            }
+                                            style={styles.drawerNavigatorRight}
+                                        >
+                                            <SvgUser height="25px" width="25px" fill={variable.colorPrimary} />
+                                        </TouchableOpacity>
+                                    );
+                                },
+                                headerShown: showHeader
+                            })}
+                        >
+                            {(): ReactElement => (
+                                <Layout>
+                                    <ErrorBoundary>
+                                        {/*
                                         - Se o componente precisa de autenticação, verifica se está logado e exibe o componente.
                                         - Se não estiver logado e o componente não precisa de autenticação, exibe o componente.
                                         - Se o componente precisa de autenticação e não está logado, então não exibe o componente (null)
                                         */}
-                                    {authRequired && status === ActionType.LOGGED_IN ? <Component /> : !authRequired ? <Component /> : null}
-                                </ErrorBoundary>
-                            </Layout>
-                        )}
-                    </Drawer.Screen>
-                );
-            })}
+                                        {authRequired && status === ActionType.LOGGED_IN ? <Component /> : !authRequired ? <Component /> : null}
+                                    </ErrorBoundary>
+                                </Layout>
+                            )}
+                        </Drawer.Screen>
+                    );
+                }
+            )}
         </Drawer.Navigator>
     );
 }

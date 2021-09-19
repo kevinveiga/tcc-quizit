@@ -1,34 +1,29 @@
 import React, { ReactElement } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Spacer } from '../../components/layout/spacer';
-import { Title4 } from '../../components/text/text';
+import { Title2 } from '../../components/text/text';
 
 import { layout } from '../../styles/layout';
 import { variable } from '../../styles/variable';
 
-function Ajuda(): ReactElement {
+function Usuario(): ReactElement {
     // STYLE
     const styles = StyleSheet.create({
-        ajuda: {
+        usuario: {
             minHeight: Dimensions.get('window').height - 100 - variable.headerHeight - variable.footerHeight,
             justifyContent: 'flex-start'
         }
     });
 
     return (
-        <View style={{ ...layout.container }}>
+        <View style={layout.container}>
             <ScrollView>
-                <View style={styles.ajuda}>
-                    <Spacer height={25} />
-
-                    <Title4 textAlign="center">Ajuda</Title4>
-
-                    <Spacer />
+                <View style={styles.usuario}>
+                    <Title2>Usuario</Title2>
                 </View>
             </ScrollView>
         </View>
     );
 }
 
-export default Ajuda;
+export default Usuario;

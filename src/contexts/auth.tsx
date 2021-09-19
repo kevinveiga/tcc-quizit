@@ -4,6 +4,7 @@ import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
+import { IAuthData } from '../entities/auth';
 import { ILogin } from '../services/auth';
 import { ActionType } from '../stores/action/actionType';
 import { IAuth, authReducer, initialState } from '../stores/reducer/auth';
@@ -36,7 +37,20 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
 
     const onAuthStateChanged = useCallback(
         (user: FirebaseAuthTypes.User | null): void => {
-            dispatch({ payload: user, type: user ? ActionType.LOGGED_IN : ActionType.LOGGED_OUT });
+            auth()
+                .currentUser?.getIdTokenResult()
+                .then((idTokenResult) => {
+                    let newUser = user as IAuthData;
+
+                    if (user?.uid) {
+                        newUser = { ...user, admin: idTokenResult.claims.admin };
+                    }
+
+                    dispatch({ payload: newUser, type: user?.uid ? ActionType.LOGGED_IN : ActionType.LOGGED_OUT });
+                })
+                .catch((err: any) => {
+                    throw new Error(err.code);
+                });
 
             if (stateInitializing) {
                 setStateInitializing(false);

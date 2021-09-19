@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.8] - 2021-09-19 - Kevin M. Veiga
+
+### Added
+
+-   Login Admin
+
 ## [0.0.7] - 2021-09-03 - Kevin M. Veiga
 
 ### Added

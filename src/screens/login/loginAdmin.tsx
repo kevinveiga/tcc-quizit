@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
-import { Alert, Dimensions, Platform, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
@@ -13,9 +13,8 @@ import { IFormLogin } from '../../interface';
 import { ActionType } from '../../stores/action/actionType';
 
 import { InputEmail, InputPassword } from '../../components/form/form';
-import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
-import { P, Title1, Title2 } from '../../components/text/text';
+import { Title1, Title2 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { inputSecondary } from '../../styles/form';
@@ -25,7 +24,7 @@ import { variable } from '../../styles/variable';
 import SvgKey from '../../assets/svg/svg-key.svg';
 import SvgUser from '../../assets/svg/svg-user.svg';
 
-function Login(): ReactElement {
+function LoginAdmin(): ReactElement {
     // VARIABLE
     const initialData: IFormLogin = {
         email: '',
@@ -60,7 +59,7 @@ function Login(): ReactElement {
             if (routeToRedirect) {
                 navigation.dispatch(CommonActions.navigate({ name: routeToRedirect, params: routeParams }));
             } else {
-                navigation.dispatch(CommonActions.navigate({ name: 'Usuario' }));
+                navigation.dispatch(CommonActions.navigate({ name: 'Admin' }));
             }
         }
 
@@ -109,7 +108,7 @@ function Login(): ReactElement {
 
                     <Spacer height={25} />
 
-                    <Title2 textAlign="center">Login</Title2>
+                    <Title2 textAlign="center">Login Admin</Title2>
 
                     <Spacer height={25} />
 
@@ -146,68 +145,10 @@ function Login(): ReactElement {
                     </View>
 
                     <Spacer height={25} />
-
-                    <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Esqueci a senha' }))}>
-                        <P textAlign="center">Esqueceu a senha? Clique aqui</P>
-                    </TouchableOpacity>
-
-                    <Spacer height={25} />
-
-                    <HorizontalLine />
-
-                    <Spacer height={25} />
-
-                    {Platform.OS === 'android' ? (
-                        <View>
-                            <Button
-                                buttonStyle={{ ...button.buttonPrimary, ...styles.buttonGoogle }}
-                                disabled={status === ActionType.ATTEMPTING}
-                                onPress={(): any =>
-                                    actions?.loginGoogle().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
-                                }
-                                title="Login Google"
-                                type="solid"
-                            />
-
-                            <Spacer height={25} />
-
-                            <Button
-                                buttonStyle={{ ...button.buttonPrimary, ...styles.buttonFacebook }}
-                                disabled={status === ActionType.ATTEMPTING}
-                                onPress={(): any =>
-                                    actions?.loginFacebook().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
-                                }
-                                title="Login Facebook"
-                                type="solid"
-                            />
-                        </View>
-                    ) : null}
-
-                    <Spacer height={25} />
-
-                    <HorizontalLine />
-
-                    <Spacer height={25} />
-
-                    <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Criar Login' }))}>
-                        <P fontSize={20} textAlign="center">
-                            Não tem conta? Crie uma aqui
-                        </P>
-                    </TouchableOpacity>
-
-                    <Spacer height={25} />
-
-                    <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Login Admin' }))}>
-                        <P fontSize={20} textAlign="center">
-                            Login Administrativo
-                        </P>
-                    </TouchableOpacity>
-
-                    <Spacer height={25} />
                 </View>
             </ScrollView>
         </View>
     );
 }
 
-export default Login;
+export default LoginAdmin;

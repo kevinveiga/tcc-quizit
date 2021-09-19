@@ -1,48 +1,34 @@
-import { ComponentProps, ComponentType } from 'react';
+import { IRoutes } from '../interface';
 
 import { LayoutAdmin } from '../components/layout/layoutAdmin';
 import { LayoutDefault } from '../components/layout/layoutDefault';
 import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
-import Ajuda from '../screens/ajuda/ajuda';
+import Admin from '../screens/admin/admin';
 import Login from '../screens/login/login';
+import LoginAdmin from '../screens/login/loginAdmin';
 import LoginCreate from '../screens/login/loginCreate';
 import LoginPasswordReset from '../screens/login/loginPasswordReset';
-import * as Admin from '../screens/admin';
-
-/**
- * Interface de rotas
- * @param {boolean} authRequired - Se a rota precisa de autenticação
- * @param {Component} component - Componente da rota
- * @param {Component} layout - Componente de estrutura do layout
- * @param {string} routeLabel - Label da rota
- * @param {boolean} showInMenu - Mostra no menu
- */
-export interface IRoutes {
-    authRequired?: boolean;
-    component: ComponentType<ComponentProps<any>> | ComponentType<any>;
-    layout: ComponentType<ComponentProps<any>> | ComponentType<any>;
-    order?: number;
-    routeLabel: string;
-    showHeader?: boolean;
-    showInMenu?: boolean;
-}
+import Usuario from '../screens/usuario/usuario';
 
 export const routes: IRoutes[] = [
-    {
-        authRequired: false,
-        component: Ajuda,
-        layout: LayoutDefault,
-        order: 1,
-        routeLabel: 'Ajuda'
-    },
     {
         authRequired: false,
         component: Login,
         layout: LayoutNoFooter,
         order: 0,
         routeLabel: 'Login',
-        showHeader: false
+        showHeader: false,
+        showInMenu: false
+    },
+    {
+        authRequired: false,
+        component: LoginAdmin,
+        layout: LayoutNoFooter,
+        order: 0,
+        routeLabel: 'Login Admin',
+        showHeader: false,
+        showInMenu: false
     },
     {
         authRequired: false,
@@ -50,7 +36,8 @@ export const routes: IRoutes[] = [
         layout: LayoutNoFooter,
         order: 0,
         routeLabel: 'Criar Login',
-        showHeader: false
+        showHeader: false,
+        showInMenu: false
     },
     {
         authRequired: false,
@@ -58,13 +45,25 @@ export const routes: IRoutes[] = [
         layout: LayoutNoFooter,
         order: 0,
         routeLabel: 'Esqueci a senha',
-        showHeader: false
-    },
-    // Admin
+        showHeader: false,
+        showInMenu: false
+    }
+];
+
+export const routesAdmin: IRoutes[] = [
     {
-        component: Admin.Admin,
+        component: Admin,
         layout: LayoutAdmin,
         order: 0,
         routeLabel: 'Admin'
+    }
+];
+
+export const routesUser: IRoutes[] = [
+    {
+        component: Usuario,
+        layout: LayoutDefault,
+        order: 0,
+        routeLabel: 'Usuario'
     }
 ];

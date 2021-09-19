@@ -1,8 +1,11 @@
 {
-    "name": "quizit",
-    "version": "0.0.1",
+    "name": "tcc-quizit",
+    "version": "1.0.0",
     "private": true,
     "main": "index.js",
+    "repository": "git@github.com:kevinveiga/tcc-quizit.git",
+    "author": "Kevin Veiga <kevin.veiga@gmail.com>",
+    "license": "MIT",
     "scripts": {
         "android": "react-native run-android",
         "ios": "react-native run-ios",

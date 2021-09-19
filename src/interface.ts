@@ -1,3 +1,5 @@
+import { ComponentProps, ComponentType } from 'react';
+
 export interface IFormLogin {
     email: string;
     password: string;
@@ -6,6 +8,16 @@ export interface IFormLogin {
 
 export interface ILoginPasswordReset {
     email: string;
+}
+
+export interface IRoutes {
+    authRequired?: boolean;
+    component: ComponentType<ComponentProps<any>> | ComponentType<any>;
+    layout: ComponentType<ComponentProps<any>> | ComponentType<any>;
+    order?: number;
+    routeLabel: string;
+    showHeader?: boolean;
+    showInMenu?: boolean;
 }
 
 export interface IVariable {
