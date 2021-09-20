@@ -47,19 +47,16 @@ export const routes: IRoutes[] = [
         routeLabel: 'Esqueci a senha',
         showHeader: false,
         showInMenu: false
-    }
-];
-
-export const routesAdmin: IRoutes[] = [
+    },
+    // ADMIN
     {
+        adminRole: true,
         component: Admin,
         layout: LayoutAdmin,
         order: 0,
         routeLabel: 'Admin'
-    }
-];
-
-export const routesUser: IRoutes[] = [
+    },
+    // USER
     {
         component: Usuario,
         layout: LayoutDefault,

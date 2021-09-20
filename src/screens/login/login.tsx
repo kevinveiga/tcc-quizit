@@ -103,11 +103,9 @@ function Login(): ReactElement {
         <View style={{ ...layout.container }}>
             <ScrollView>
                 <View style={styles.login}>
-                    <Spacer height={25} />
-
                     <Title1 textAlign="center">QUIZ IT</Title1>
 
-                    <Spacer height={25} />
+                    <Spacer />
 
                     <Title2 textAlign="center">Login</Title2>
 
@@ -198,9 +196,7 @@ function Login(): ReactElement {
                     <Spacer height={25} />
 
                     <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Login Admin' }))}>
-                        <P fontSize={20} textAlign="center">
-                            Login Administrativo
-                        </P>
+                        <P textAlign="center">Login de Admin</P>
                     </TouchableOpacity>
 
                     <Spacer height={25} />

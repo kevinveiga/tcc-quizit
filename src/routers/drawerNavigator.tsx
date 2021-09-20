@@ -1,13 +1,14 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import auth from '@react-native-firebase/auth';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { CommonActions, DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { displayName } from '../../app.json';
 import { useAuth } from '../contexts/auth';
 import { IRoutes } from '../interface';
-import { routes, routesUser } from './routes';
+import { routes } from './routes';
 import { ActionType } from '../stores/action/actionType';
 
 import { ErrorBoundary } from '../components/errorBoundary/errorBoundary';
@@ -42,19 +43,63 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
 
     // STATE
     const { status } = stateAuth;
+    const [stateAdminRole, setStateAdminRole] = useState(false);
+    const [stateInitializing, setStateInitializing] = useState(true);
+
+    const onAuthStateChanged = useCallback((): void => {
+        auth()
+            .currentUser?.getIdTokenResult()
+            .then((idTokenResult) => {
+                setStateAdminRole(idTokenResult.claims.admin);
+            })
+            .catch((err: any) => {
+                throw new Error(err.code);
+            });
+
+        if (stateInitializing) {
+            setStateInitializing(false);
+        }
+    }, [stateInitializing]);
+
+    // Quando o estado do usuário é alterado
+    useEffect(() => {
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
+        return subscriber;
+    }, [onAuthStateChanged]);
+
+    // Se está inicializando o app, então retorna vazio
+    if (stateInitializing) {
+        return <></>;
+    }
 
     return (
         <>
             <DrawerContentScrollView {...props}>
-                {routesUser
+                {routes
                     .sort((a, b) => {
                         return (a.order || 0) - (b.order || 0);
                     })
-                    .map(({ authRequired = true, routeLabel, showInMenu = true }: IRoutes) => {
+                    .map(({ adminRole = false, authRequired = true, routeLabel, showInMenu = true }: IRoutes) => {
                         const { key } = state.routes[state.routes.findIndex((item: any) => item.name === routeLabel)];
                         const { activeTintColor, drawerLabel, inactiveTintColor } = descriptors[key].options;
 
-                        if (!authRequired && showInMenu) {
+                        /*
+                        - Se o item precisa de autenticação e que seja do papel de Admin, verifica se está logado e se tem o papel de Admin, então mostra.
+                        - Se o item precisa de autenticação e não precisa que seja do papel de Admin, verifica se está logado, então mostra.
+                        - Se o item não precisa de autenticação, então mostra.
+                        - Se o item precisa de autenticação e não está logado, então não mostra (null)
+                        */
+                        const showDrawerItem =
+                            status === ActionType.LOGGED_IN && adminRole && stateAdminRole
+                                ? true
+                                : status === ActionType.LOGGED_IN && !adminRole && !stateAdminRole && authRequired
+                                ? true
+                                : !authRequired
+                                ? true
+                                : false;
+
+                        if (showDrawerItem && showInMenu) {
                             return (
                                 <DrawerItem
                                     activeTintColor={activeTintColor || variable.colorPrimary}
@@ -67,7 +112,7 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
                             );
                         }
 
-                        if (status === ActionType.LOGGED_IN && authRequired && showInMenu) {
+                        if (showDrawerItem && showInMenu) {
                             return (
                                 <DrawerItem
                                     activeTintColor={activeTintColor || variable.colorPrimary}
@@ -105,7 +150,7 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
     );
 }
 
-export function DrawerNavigatorUser(): ReactElement {
+export function DrawerNavigator(): ReactElement {
     // STYLE
     const styles = StyleSheet.create({
         drawerNavigatorLeft: {
@@ -122,15 +167,59 @@ export function DrawerNavigatorUser(): ReactElement {
 
     // STATE
     const { status } = stateAuth;
+    const [stateAdminRole, setStateAdminRole] = useState(false);
+    const [stateInitializing, setStateInitializing] = useState(true);
+
+    const onAuthStateChanged = useCallback((): void => {
+        auth()
+            .currentUser?.getIdTokenResult()
+            .then((idTokenResult) => {
+                setStateAdminRole(idTokenResult.claims.admin);
+            })
+            .catch((err: any) => {
+                throw new Error(err.code);
+            });
+
+        if (stateInitializing) {
+            setStateInitializing(false);
+        }
+    }, [stateInitializing]);
+
+    // Quando o estado do usuário é alterado
+    useEffect(() => {
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
+        return subscriber;
+    }, [onAuthStateChanged]);
+
+    // Se está inicializando o app, então retorna vazio
+    if (stateInitializing) {
+        return <></>;
+    }
 
     return (
         <Drawer.Navigator
             drawerContent={(props): ReactElement => <MenuDrawerContent {...props} />}
-            initialRouteName={status === ActionType.LOGGED_IN ? 'Usuario' : 'Login'}
+            initialRouteName={'Login'}
             screenOptions={{ ...header, headerTitleAlign: 'center' }}
         >
-            {[...routes, ...routesUser].map(
-                ({ authRequired = true, component: Component, layout: Layout, routeLabel, showHeader = true }: IRoutes) => {
+            {routes.map(
+                ({ adminRole = false, authRequired = true, component: Component, layout: Layout, routeLabel, showHeader = true }: IRoutes) => {
+                    /*
+                    - Se o componente precisa de autenticação e que seja do papel de Admin, verifica se está logado e se tem o papel de Admin, então mostra.
+                    - Se o componente precisa de autenticação e não precisa que seja do papel de Admin, verifica se está logado, então mostra.
+                    - Se o componente não precisa de autenticação, então mostra.
+                    - Se o componente precisa de autenticação e não está logado, então não mostra (null)
+                    */
+                    const showComponent =
+                        status === ActionType.LOGGED_IN && adminRole && stateAdminRole
+                            ? true
+                            : status === ActionType.LOGGED_IN && !adminRole && !stateAdminRole && authRequired
+                            ? true
+                            : !authRequired
+                            ? true
+                            : false;
+
                     return (
                         <Drawer.Screen
                             key={routeLabel}
@@ -176,14 +265,7 @@ export function DrawerNavigatorUser(): ReactElement {
                         >
                             {(): ReactElement => (
                                 <Layout>
-                                    <ErrorBoundary>
-                                        {/*
-                                        - Se o componente precisa de autenticação, verifica se está logado e exibe o componente.
-                                        - Se não estiver logado e o componente não precisa de autenticação, exibe o componente.
-                                        - Se o componente precisa de autenticação e não está logado, então não exibe o componente (null)
-                                        */}
-                                        {authRequired && status === ActionType.LOGGED_IN ? <Component /> : !authRequired ? <Component /> : null}
-                                    </ErrorBoundary>
+                                    <ErrorBoundary>{showComponent ? <Component /> : null}</ErrorBoundary>
                                 </Layout>
                             )}
                         </Drawer.Screen>

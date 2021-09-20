@@ -11,6 +11,7 @@ export interface ILoginPasswordReset {
 }
 
 export interface IRoutes {
+    adminRole?: boolean;
     authRequired?: boolean;
     component: ComponentType<ComponentProps<any>> | ComponentType<any>;
     layout: ComponentType<ComponentProps<any>> | ComponentType<any>;

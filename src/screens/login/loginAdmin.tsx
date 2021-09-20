@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
-import { Alert, Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
@@ -14,7 +14,7 @@ import { ActionType } from '../../stores/action/actionType';
 
 import { InputEmail, InputPassword } from '../../components/form/form';
 import { Spacer } from '../../components/layout/spacer';
-import { Title1, Title2 } from '../../components/text/text';
+import { P, Title1, Title2 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { inputSecondary } from '../../styles/form';
@@ -102,11 +102,9 @@ function LoginAdmin(): ReactElement {
         <View style={{ ...layout.container }}>
             <ScrollView>
                 <View style={styles.login}>
-                    <Spacer height={25} />
-
                     <Title1 textAlign="center">QUIZ IT</Title1>
 
-                    <Spacer height={25} />
+                    <Spacer />
 
                     <Title2 textAlign="center">Login Admin</Title2>
 
@@ -143,6 +141,12 @@ function LoginAdmin(): ReactElement {
                             </View>
                         </Form>
                     </View>
+
+                    <Spacer height={25} />
+
+                    <TouchableOpacity onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Login' }))}>
+                        <P textAlign="center">Login de Usuário</P>
+                    </TouchableOpacity>
 
                     <Spacer height={25} />
                 </View>
