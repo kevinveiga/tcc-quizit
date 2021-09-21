@@ -210,10 +210,10 @@ Melhor opção para emulador é utilizando um aparelho, seguir este link [https:
     cd android && ./gradlew clean && cd ..
 
 -   Depois executar no terminal o comando de bundle do env de desenvolvimento ou de produção:
+    Env de desenvolvimento:
     yarn run publish:dev bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
 
-    ou o ENV de produção:
-
+    Env de produção:
     yarn run publish bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
 
 -   Depois executar no terminal o comando de APK versão debug ou release:

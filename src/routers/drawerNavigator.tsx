@@ -1,7 +1,6 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import auth from '@react-native-firebase/auth';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { CommonActions, DrawerActions, useNavigation } from '@react-navigation/native';
 
@@ -10,6 +9,7 @@ import { useAuth } from '../contexts/auth';
 import { IRoutes } from '../interface';
 import { routes } from './routes';
 import { ActionType } from '../stores/action/actionType';
+import { useVerifyAdminRole } from '../stores/auth/verifyAdminRole';
 
 import { ErrorBoundary } from '../components/errorBoundary/errorBoundary';
 import { Span, Title3 } from '../components/text/text';
@@ -43,30 +43,7 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
 
     // STATE
     const { status } = stateAuth;
-    const [stateAdminRole, setStateAdminRole] = useState(false);
-    const [stateInitializing, setStateInitializing] = useState(true);
-
-    const onAuthStateChanged = useCallback((): void => {
-        auth()
-            .currentUser?.getIdTokenResult()
-            .then((idTokenResult) => {
-                setStateAdminRole(idTokenResult.claims.admin);
-            })
-            .catch((err: any) => {
-                throw new Error(err.code);
-            });
-
-        if (stateInitializing) {
-            setStateInitializing(false);
-        }
-    }, [stateInitializing]);
-
-    // Quando o estado do usuário é alterado
-    useEffect(() => {
-        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-
-        return subscriber;
-    }, [onAuthStateChanged]);
+    const { stateAdminRole, stateInitializing } = useVerifyAdminRole();
 
     // Se está inicializando o app, então retorna vazio
     if (stateInitializing) {
@@ -167,30 +144,7 @@ export function DrawerNavigator(): ReactElement {
 
     // STATE
     const { status } = stateAuth;
-    const [stateAdminRole, setStateAdminRole] = useState(false);
-    const [stateInitializing, setStateInitializing] = useState(true);
-
-    const onAuthStateChanged = useCallback((): void => {
-        auth()
-            .currentUser?.getIdTokenResult()
-            .then((idTokenResult) => {
-                setStateAdminRole(idTokenResult.claims.admin);
-            })
-            .catch((err: any) => {
-                throw new Error(err.code);
-            });
-
-        if (stateInitializing) {
-            setStateInitializing(false);
-        }
-    }, [stateInitializing]);
-
-    // Quando o estado do usuário é alterado
-    useEffect(() => {
-        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-
-        return subscriber;
-    }, [onAuthStateChanged]);
+    const { stateAdminRole, stateInitializing } = useVerifyAdminRole();
 
     // Se está inicializando o app, então retorna vazio
     if (stateInitializing) {
