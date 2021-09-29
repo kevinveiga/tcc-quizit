@@ -1,5 +1,11 @@
 import { ComponentProps, ComponentType } from 'react';
 
+export interface ICategoriasQuestoes {
+    id: number;
+    name: string;
+    order: number;
+}
+
 export interface IFormLogin {
     email: string;
     password: string;

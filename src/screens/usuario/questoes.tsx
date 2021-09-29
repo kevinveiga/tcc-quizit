@@ -1,15 +1,16 @@
 import React, { ReactElement } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Title2 } from '../../components/text/text';
+import { Spacer } from '../../components/layout/spacer';
+import { Title1, Title2 } from '../../components/text/text';
 
 import { layout } from '../../styles/layout';
 import { variable } from '../../styles/variable';
 
-function Usuario(): ReactElement {
+function Questoes(): ReactElement {
     // STYLE
     const styles = StyleSheet.create({
-        usuario: {
+        questoes: {
             minHeight: Dimensions.get('window').height - 100 - variable.headerHeight - variable.footerHeight,
             justifyContent: 'flex-start'
         }
@@ -18,12 +19,18 @@ function Usuario(): ReactElement {
     return (
         <View style={layout.container}>
             <ScrollView>
-                <View style={styles.usuario}>
-                    <Title2>Usuario</Title2>
+                <View style={styles.questoes}>
+                    <Title1 textAlign="center">QUIZ IT</Title1>
+
+                    <Spacer />
+
+                    <Title2>Questões 1 de 10 - BI.</Title2>
+
+                    <Spacer height={25} />
                 </View>
             </ScrollView>
         </View>
     );
 }
 
-export default Usuario;
+export default Questoes;

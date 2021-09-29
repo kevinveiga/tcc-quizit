@@ -60,7 +60,7 @@ function Login(): ReactElement {
             if (routeToRedirect) {
                 navigation.dispatch(CommonActions.navigate({ name: routeToRedirect, params: routeParams }));
             } else {
-                navigation.dispatch(CommonActions.navigate({ name: 'Usuario' }));
+                navigation.dispatch(CommonActions.navigate({ name: 'Categorias Questões' }));
             }
         }
 

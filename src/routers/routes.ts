@@ -5,11 +5,11 @@ import { LayoutDefault } from '../components/layout/layoutDefault';
 import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
 import Admin from '../screens/admin/admin';
+import CategoriaQuestoes from '../screens/usuario/categoriasQuestoes';
 import Login from '../screens/login/login';
 import LoginAdmin from '../screens/login/loginAdmin';
 import LoginCreate from '../screens/login/loginCreate';
 import LoginPasswordReset from '../screens/login/loginPasswordReset';
-import Usuario from '../screens/usuario/usuario';
 
 export const routes: IRoutes[] = [
     {
@@ -58,9 +58,9 @@ export const routes: IRoutes[] = [
     },
     // USER
     {
-        component: Usuario,
+        component: CategoriaQuestoes,
         layout: LayoutDefault,
         order: 0,
-        routeLabel: 'Usuario'
+        routeLabel: 'Categorias Questões'
     }
 ];

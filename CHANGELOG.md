@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.9] - 2021-09-28 - Kevin M. Veiga
+
+### Added
+
+-   Início de telas (categorias questões e questões)
+
 ## [0.0.8] - 2021-09-19 - Kevin M. Veiga
 
 ### Added
