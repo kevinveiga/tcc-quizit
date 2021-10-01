@@ -1,11 +1,5 @@
 import { ComponentProps, ComponentType } from 'react';
 
-export interface ICategoriasQuestoes {
-    id: number;
-    name: string;
-    order: number;
-}
-
 export interface IFormLogin {
     email: string;
     password: string;
@@ -14,6 +8,12 @@ export interface IFormLogin {
 
 export interface ILoginPasswordReset {
     email: string;
+}
+
+export interface IQuestoesCategorias {
+    id: number;
+    name: string;
+    order: number;
 }
 
 export interface IRoutes {

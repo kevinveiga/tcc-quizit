@@ -1,6 +1,6 @@
-import { ICategoriasQuestoes } from './interface';
+import { IQuestoesCategorias } from './interface';
 
-export const categoriasQuestoes: ICategoriasQuestoes[] = [
+export const questoesCategorias: IQuestoesCategorias[] = [
     {
         id: 1,
         name: 'BI',

@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.10] - 2021-10-01 - Kevin M. Veiga
+
+### Fix and optimization
+
+-   Corrigindo problema no menu e otimizando funções de autenticação
+
 ## [0.0.9] - 2021-09-28 - Kevin M. Veiga
 
 ### Added

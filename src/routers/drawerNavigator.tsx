@@ -9,7 +9,6 @@ import { useAuth } from '../contexts/auth';
 import { IRoutes } from '../interface';
 import { routes } from './routes';
 import { ActionType } from '../stores/action/actionType';
-import { useVerifyAdminRole } from '../stores/auth/verifyAdminRole';
 
 import { ErrorBoundary } from '../components/errorBoundary/errorBoundary';
 import { Span, Title3 } from '../components/text/text';
@@ -38,26 +37,21 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
     });
 
     // CONTEXT
-    const { actions, stateAuth } = useAuth();
+    const { actions, stateAdminRole, stateAuth } = useAuth();
     const navigation = useNavigation();
 
     // STATE
     const { status } = stateAuth;
-    const { stateAdminRole, stateInitializing } = useVerifyAdminRole();
-
-    // Se está inicializando o app, então retorna vazio
-    if (stateInitializing) {
-        return <></>;
-    }
 
     return (
         <>
             <DrawerContentScrollView {...props}>
                 {routes
+                    .filter((item) => item.showInMenu === true)
                     .sort((a, b) => {
                         return (a.order || 0) - (b.order || 0);
                     })
-                    .map(({ adminRole = false, authRequired = true, routeLabel, showInMenu = true }: IRoutes) => {
+                    .map(({ adminRole = false, authRequired = true, routeLabel }: IRoutes) => {
                         const { key } = state.routes[state.routes.findIndex((item: any) => item.name === routeLabel)];
                         const { activeTintColor, drawerLabel, inactiveTintColor } = descriptors[key].options;
 
@@ -76,20 +70,7 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
                                 ? true
                                 : false;
 
-                        if (showDrawerItem && showInMenu) {
-                            return (
-                                <DrawerItem
-                                    activeTintColor={activeTintColor || variable.colorPrimary}
-                                    focused={state.routes.findIndex((e: any) => e.name === routeLabel) === state.index}
-                                    inactiveTintColor={inactiveTintColor || variable.fontColor}
-                                    key={key}
-                                    label={({ color }): ReactElement => <Span color={color}>{drawerLabel}</Span>}
-                                    onPress={(): void => navigation.dispatch(CommonActions.navigate({ name: routeLabel }))}
-                                />
-                            );
-                        }
-
-                        if (showDrawerItem && showInMenu) {
+                        if (showDrawerItem) {
                             return (
                                 <DrawerItem
                                     activeTintColor={activeTintColor || variable.colorPrimary}
@@ -139,17 +120,11 @@ export function DrawerNavigator(): ReactElement {
     });
 
     // CONTEXT
-    const { actions, stateAuth } = useAuth();
+    const { actions, stateAdminRole, stateAuth } = useAuth();
     const navigation = useNavigation();
 
     // STATE
     const { status } = stateAuth;
-    const { stateAdminRole, stateInitializing } = useVerifyAdminRole();
-
-    // Se está inicializando o app, então retorna vazio
-    if (stateInitializing) {
-        return <></>;
-    }
 
     return (
         <Drawer.Navigator

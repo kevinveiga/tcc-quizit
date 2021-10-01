@@ -1,15 +1,15 @@
 import { IRoutes } from '../interface';
 
 import { LayoutAdmin } from '../components/layout/layoutAdmin';
-import { LayoutDefault } from '../components/layout/layoutDefault';
 import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
 import Admin from '../screens/admin/admin';
-import CategoriaQuestoes from '../screens/usuario/categoriasQuestoes';
 import Login from '../screens/login/login';
 import LoginAdmin from '../screens/login/loginAdmin';
 import LoginCreate from '../screens/login/loginCreate';
 import LoginPasswordReset from '../screens/login/loginPasswordReset';
+import Questoes from '../screens/usuario/questoes';
+import QuestoesCategoria from '../screens/usuario/questoesCategorias';
 
 export const routes: IRoutes[] = [
     {
@@ -58,8 +58,14 @@ export const routes: IRoutes[] = [
     },
     // USER
     {
-        component: CategoriaQuestoes,
-        layout: LayoutDefault,
+        component: Questoes,
+        layout: LayoutAdmin,
+        order: 0,
+        routeLabel: 'Questões'
+    },
+    {
+        component: QuestoesCategoria,
+        layout: LayoutAdmin,
         order: 0,
         routeLabel: 'Categorias Questões'
     }

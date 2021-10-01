@@ -15,7 +15,7 @@ export const useVerifyAuthentication = (): void => {
     const { status } = stateAuth;
 
     useEffect(() => {
-        // Se não estiver logado, redireciona para Home, passando os parâmetros
+        // Se não estiver logado, redireciona para Login, passando os parâmetros
         if (status !== ActionType.LOGGED_IN) {
             navigation.dispatch(CommonActions.navigate({ name: 'Login', params: { routeParams: route.params, routeToRedirect: route.name } }));
         }

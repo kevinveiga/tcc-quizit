@@ -18,11 +18,13 @@ interface IActions {
 }
 
 interface IAuthContext {
+    stateAdminRole: boolean;
     stateAuth: IAuth;
     actions?: IActions | null;
 }
 
 const AuthContext = createContext<IAuthContext>({
+    stateAdminRole: false,
     stateAuth: initialState,
     actions: null
 });
@@ -32,10 +34,20 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
     const [stateAuth, dispatch] = useReducer(authReducer, initialState);
 
     // STATE
+    const [stateAdminRole, setStateAdminRole] = useState(false);
     const [stateInitializing, setStateInitializing] = useState(true);
 
-    const onAuthStateChanged = useCallback(
+    const authStateChanged = useCallback(
         (user: FirebaseAuthTypes.User | null): void => {
+            auth()
+                .currentUser?.getIdTokenResult()
+                .then((idTokenResult) => {
+                    setStateAdminRole(idTokenResult.claims.admin);
+                })
+                .catch((err: any) => {
+                    throw new Error(err.code);
+                });
+
             dispatch({ payload: user, type: user?.uid ? ActionType.LOGGED_IN : ActionType.LOGGED_OUT });
 
             if (stateInitializing) {
@@ -54,10 +66,10 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
 
     // Quando o estado do usuário é alterado
     useEffect(() => {
-        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        const subscriber = auth().onAuthStateChanged(authStateChanged);
 
         return subscriber;
-    }, [onAuthStateChanged]);
+    }, [authStateChanged]);
 
     // ACTION
     const actions = {
@@ -181,7 +193,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
         return <></>;
     }
 
-    return <AuthContext.Provider value={{ stateAuth: stateAuth, actions: actions }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ stateAdminRole: stateAdminRole, stateAuth: stateAuth, actions: actions }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): IAuthContext {
