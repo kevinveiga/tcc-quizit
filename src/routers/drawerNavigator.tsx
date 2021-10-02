@@ -18,7 +18,6 @@ import { variable } from '../styles/variable';
 
 import SvgClose from '../assets/svg/svg-close.svg';
 import SvgMenu from '../assets/svg/svg-menu.svg';
-import SvgUser from '../assets/svg/svg-user.svg';
 
 const Drawer = createDrawerNavigator();
 
@@ -47,7 +46,7 @@ function MenuDrawerContent({ descriptors, state, props }: any): ReactElement {
         <>
             <DrawerContentScrollView {...props}>
                 {routes
-                    .filter((item) => item.showInMenu === true)
+                    .filter((item) => item.showInMenu !== false)
                     .sort((a, b) => {
                         return (a.order || 0) - (b.order || 0);
                     })
@@ -120,7 +119,7 @@ export function DrawerNavigator(): ReactElement {
     });
 
     // CONTEXT
-    const { actions, stateAdminRole, stateAuth } = useAuth();
+    const { stateAdminRole, stateAuth } = useAuth();
     const navigation = useNavigation();
 
     // STATE
@@ -174,18 +173,8 @@ export function DrawerNavigator(): ReactElement {
                                 },
                                 headerRight: (): ReactElement => {
                                     return (
-                                        <TouchableOpacity
-                                            onPress={(): any =>
-                                                actions
-                                                    ?.logout()
-                                                    .then(() => {
-                                                        navigation.dispatch(CommonActions.navigate({ name: 'Login' }));
-                                                    })
-                                                    .catch((logoutError) => Alert.alert('Erro:', logoutError.toString(), [{ text: 'Fechar' }]))
-                                            }
-                                            style={styles.drawerNavigatorRight}
-                                        >
-                                            <SvgUser height="25px" width="25px" fill={variable.colorPrimary} />
+                                        <TouchableOpacity onPress={(): any => navigation.goBack()} style={styles.drawerNavigatorRight}>
+                                            <Span>Voltar</Span>
                                         </TouchableOpacity>
                                     );
                                 },

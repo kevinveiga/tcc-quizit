@@ -61,7 +61,8 @@ export const routes: IRoutes[] = [
         component: Questoes,
         layout: LayoutAdmin,
         order: 0,
-        routeLabel: 'Questões'
+        routeLabel: 'Questões',
+        showInMenu: false
     },
     {
         component: QuestoesCategoria,
