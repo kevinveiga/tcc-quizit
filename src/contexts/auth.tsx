@@ -4,6 +4,7 @@ import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
+import { useApp } from './app';
 import { ILogin } from '../services/auth';
 import { ActionType } from '../stores/action/actionType';
 import { IAuth, authReducer, initialState } from '../stores/reducer/auth';
@@ -30,13 +31,18 @@ const AuthContext = createContext<IAuthContext>({
 });
 
 export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement {
+    // CONTEXT
+    const { setStateLoader } = useApp();
+
     // REDUCER
     const [stateAuth, dispatch] = useReducer(authReducer, initialState);
+    const { status } = stateAuth;
 
     // STATE
     const [stateAdminRole, setStateAdminRole] = useState(false);
     const [stateInitializing, setStateInitializing] = useState(true);
 
+    // FUNCTION
     const authStateChanged = useCallback(
         (user: FirebaseAuthTypes.User | null): void => {
             auth()
@@ -56,6 +62,18 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
         },
         [stateInitializing]
     );
+
+    // USEEFFECT
+    // Loader no login
+    useEffect(() => {
+        if (status === ActionType.ATTEMPTING) {
+            setStateLoader(true);
+        }
+
+        return (): void => {
+            setStateLoader(false);
+        };
+    }, [status, setStateLoader]);
 
     // Inicia o GoogleSignin
     useEffect(() => {

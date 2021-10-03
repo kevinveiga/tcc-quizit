@@ -25,7 +25,7 @@ export function AppProvider({ children }: PropsWithChildren<any>): ReactElement 
         >
             {stateLoader && (
                 <View style={layout.loaderWrap}>
-                    <ActivityIndicator size="large" color={variable.colorPrimary} />
+                    <ActivityIndicator size="large" color={variable.colorWhite} />
                 </View>
             )}
 

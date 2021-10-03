@@ -1,5 +1,19 @@
 # Change Log
 
+## [0.0.12] - 2021-10-03 - Kevin M. Veiga
+
+### Added
+
+-   react-native-simple-radio-button
+
+-   Estilo e funcionalidades de categorias das questões e respostas das questões
+
+## [0.0.11] - 2021-10-02 - Kevin M. Veiga
+
+### Added
+
+-   @react-native-firebase/firestore
+
 ## [0.0.10] - 2021-10-01 - Kevin M. Veiga
 
 ### Fix and optimization

@@ -421,15 +421,17 @@ stateLista.length > 0;
 
 -   [Autenticação do Google](https://rnfirebase.io/auth/social-auth)
 
-#### **FONTS**
+#### **FONT**
 
 -   [Custom fonts](https://mehrankhandev.medium.com/ultimate-guide-to-use-custom-fonts-in-react-native-77fcdf859cf4)
 
-#### **FORMS**
+#### **FORM**
 
 -   [Unform](https://unform.dev)
 
 -   [Unform - Vídeo](https://www.youtube.com/watch?v=P65RJTTqkN4&ab_channel=Rocketseat)
+
+-   [Radio button](https://github.com/moschan/react-native-simple-radio-button)
 
 #### **NAVIGATION**
 

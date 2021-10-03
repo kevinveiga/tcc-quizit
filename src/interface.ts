@@ -1,4 +1,7 @@
-import { ComponentProps, ComponentType } from 'react';
+import { ComponentProps, ComponentType, ReactElement, ReactNode } from 'react';
+import { TextInput, TextInputProps } from 'react-native';
+
+import { IInputStyle } from './styles/form';
 
 export interface IFormLogin {
     email: string;
@@ -6,8 +9,39 @@ export interface IFormLogin {
     passwordConfirm?: string;
 }
 
+export interface IInput extends TextInputProps {
+    cbFunction?: (value: any) => void;
+    maxLength?: number;
+    minLength?: number;
+    name?: string;
+    label?: string;
+    leftIcon?: ReactElement;
+    rightIcon?: ReactElement;
+    theme?: IInputStyle;
+}
+
+export interface IInputRadioItems {
+    id: string;
+    label: string;
+    value: string;
+}
+
+export interface IInputReference extends TextInput {
+    value: string;
+}
+
 export interface ILoginPasswordReset {
     email: string;
+}
+
+// TODO: usar o React Native Picker Select e modificar essa interface
+export interface IPickerSelect extends TextInput {
+    cbFunction?: (value: any) => void;
+    children?: ReactNode;
+    label?: string;
+    leftPosition?: string;
+    name: string;
+    rightPosition?: string;
 }
 
 export interface IQuestoesCategorias {

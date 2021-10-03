@@ -1,29 +1,16 @@
 import React, { ReactElement, useCallback, useEffect, useState, useRef } from 'react';
-import { TextInput, TextInputProps } from 'react-native';
 
 import { useField } from '@unform/core';
 import { Input } from 'react-native-elements';
 
 import { maskCep, maskCurrency, maskPhone } from '../../helpers/mask';
+import { IInput, IInputReference } from '../../interface';
 
-import { inputPrimary, IInputStyle } from '../../styles/form';
+import { inputPrimary } from '../../styles/form';
 import { variable } from '../../styles/variable';
 
-interface IInput extends TextInputProps {
-    maxLength?: number;
-    minLength?: number;
-    name?: string;
-    label?: string;
-    leftIcon?: ReactElement;
-    rightIcon?: ReactElement;
-    theme?: IInputStyle;
-}
-
-interface IInputReference extends TextInput {
-    value: string;
-}
-
 export function InputCep({
+    cbFunction,
     label,
     leftIcon,
     maxLength = 9,
@@ -49,11 +36,18 @@ export function InputCep({
         });
     }, [fieldName, registerField]);
 
-    const handleChangeText = useCallback((value: string) => {
-        const { formattedValue } = maskCep(value);
+    const handleChangeText = useCallback(
+        (value: string) => {
+            const { formattedValue } = maskCep(value);
 
-        setStateText(formattedValue);
-    }, []);
+            setStateText(formattedValue);
+
+            if (cbFunction) {
+                cbFunction(value);
+            }
+        },
+        [cbFunction]
+    );
 
     return (
         <Input
@@ -79,6 +73,7 @@ export function InputCep({
 }
 
 export function InputCurrency({
+    cbFunction,
     label,
     leftIcon,
     maxLength = 31,
@@ -104,11 +99,18 @@ export function InputCurrency({
         });
     }, [fieldName, registerField]);
 
-    const handleChangeText = useCallback((value: string) => {
-        const { formattedValue } = maskCurrency(value);
+    const handleChangeText = useCallback(
+        (value: string) => {
+            const { formattedValue } = maskCurrency(value);
 
-        setStateText(formattedValue);
-    }, []);
+            setStateText(formattedValue);
+
+            if (cbFunction) {
+                cbFunction(value);
+            }
+        },
+        [cbFunction]
+    );
 
     return (
         <Input
@@ -134,11 +136,11 @@ export function InputCurrency({
 }
 
 export function InputDefault({
+    cbFunction,
     label,
     leftIcon,
     maxLength = 200,
     name = 'default',
-    onChangeText,
     placeholder,
     rightIcon,
     theme = inputPrimary,
@@ -186,11 +188,11 @@ export function InputDefault({
                 inputRef.current.value = value;
             }
 
-            if (onChangeText) {
-                onChangeText(value);
+            if (cbFunction) {
+                cbFunction(value);
             }
         },
-        [onChangeText]
+        [cbFunction]
     );
 
     return (
@@ -216,11 +218,11 @@ export function InputDefault({
 }
 
 export function InputEmail({
+    cbFunction,
     label,
     leftIcon,
     maxLength = 70,
     name = 'email',
-    onChangeText,
     placeholder = 'E-mail',
     rightIcon,
     theme = inputPrimary,
@@ -268,11 +270,11 @@ export function InputEmail({
                 inputRef.current.value = value;
             }
 
-            if (onChangeText) {
-                onChangeText(value);
+            if (cbFunction) {
+                cbFunction(value);
             }
         },
-        [onChangeText]
+        [cbFunction]
     );
 
     return (
@@ -300,11 +302,11 @@ export function InputEmail({
 }
 
 export function InputPassword({
+    cbFunction,
     label,
     leftIcon,
     maxLength = 30,
     name = 'password',
-    onChangeText,
     placeholder = 'Senha',
     rightIcon,
     theme = inputPrimary,
@@ -352,11 +354,11 @@ export function InputPassword({
                 inputRef.current.value = value;
             }
 
-            if (onChangeText) {
-                onChangeText(value);
+            if (cbFunction) {
+                cbFunction(value);
             }
         },
-        [onChangeText]
+        [cbFunction]
     );
 
     return (
@@ -385,11 +387,11 @@ export function InputPassword({
 }
 
 export function InputPasswordConfirm({
+    cbFunction,
     label,
     leftIcon,
     maxLength = 30,
     name = 'passwordConfirm',
-    onChangeText,
     placeholder = 'Confirmar senha',
     rightIcon,
     theme = inputPrimary,
@@ -437,11 +439,11 @@ export function InputPasswordConfirm({
                 inputRef.current.value = value;
             }
 
-            if (onChangeText) {
-                onChangeText(value);
+            if (cbFunction) {
+                cbFunction(value);
             }
         },
-        [onChangeText]
+        [cbFunction]
     );
 
     return (
@@ -470,6 +472,7 @@ export function InputPasswordConfirm({
 }
 
 export function InputPhone({
+    cbFunction,
     label,
     leftIcon,
     maxLength = 15,
@@ -495,11 +498,18 @@ export function InputPhone({
         });
     }, [fieldName, registerField]);
 
-    const handleChangeText = useCallback((value: string) => {
-        const { formattedValue } = maskPhone(value);
+    const handleChangeText = useCallback(
+        (value: string) => {
+            const { formattedValue } = maskPhone(value);
 
-        setStateText(formattedValue);
-    }, []);
+            setStateText(formattedValue);
+
+            if (cbFunction) {
+                cbFunction(value);
+            }
+        },
+        [cbFunction]
+    );
 
     return (
         <Input
