@@ -119,6 +119,10 @@ function Questoes(): ReactElement {
         stateSetRespostaSelecionada(initialValueRespostaSelecionada);
     };
 
+    const resultado = (): void => {
+        // TODO
+    };
+
     return (
         <View style={layout.container}>
             <ScrollView>
@@ -178,6 +182,10 @@ function Questoes(): ReactElement {
 
                                 {stateQuestaoAtualNumero < stateQuestoesTotal && (
                                     <Button buttonStyle={button.buttonPrimary} onPress={(): any => questaoProxima()} title="Próxima" type="solid" />
+                                )}
+
+                                {stateQuestaoAtualNumero === stateQuestoesTotal && (
+                                    <Button buttonStyle={button.buttonPrimary} onPress={(): any => resultado()} title="Finalizar" type="solid" />
                                 )}
                             </View>
                         </View>
