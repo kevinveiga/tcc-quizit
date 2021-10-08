@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
-import { useRoute } from '@react-navigation/native';
+import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { Button } from 'react-native-elements';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
@@ -47,6 +47,7 @@ function Questoes(): ReactElement {
 
     // CONTEXT
     const route: Record<string, any> = useRoute();
+    const navigation = useNavigation();
 
     // STATE
     const [stateQuestaoAtual, setStateQuestaoAtual] = useState<Record<string, any>>();
@@ -121,6 +122,7 @@ function Questoes(): ReactElement {
 
     const resultado = (): void => {
         // TODO
+        navigation.dispatch(CommonActions.navigate({ name: 'Resultado', params: { questoes: null } }));
     };
 
     return (

@@ -30,6 +30,8 @@ function Resultado(): ReactElement {
                     <Title3 textAlign="center">Resultado.</Title3>
 
                     <Spacer height={25} />
+
+                    <Title1 textAlign="center">EM DESENVOLVIMENTO</Title1>
                 </View>
             </ScrollView>
         </View>

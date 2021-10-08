@@ -10,6 +10,7 @@ import LoginCreate from '../screens/login/loginCreate';
 import LoginPasswordReset from '../screens/login/loginPasswordReset';
 import Questoes from '../screens/usuario/questoes';
 import QuestoesCategoria from '../screens/usuario/questoesCategorias';
+import Resultado from '../screens/usuario/resultado';
 
 export const routes: IRoutes[] = [
     {
@@ -69,5 +70,12 @@ export const routes: IRoutes[] = [
         layout: LayoutAdmin,
         order: 0,
         routeLabel: 'Categorias Questões'
+    },
+    {
+        component: Resultado,
+        layout: LayoutAdmin,
+        order: 0,
+        routeLabel: 'Resultado',
+        showInMenu: false
     }
 ];
