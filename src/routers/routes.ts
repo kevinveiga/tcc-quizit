@@ -4,6 +4,9 @@ import { LayoutAdmin } from '../components/layout/layoutAdmin';
 import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
 import Admin from '../screens/admin/admin';
+import QuestaoCriar from '../screens/admin/questaoCriar';
+import QuestaoEditar from '../screens/admin/questaoEditar';
+import QuestoesListar from '../screens/admin/questoesListar';
 import Login from '../screens/login/login';
 import LoginAdmin from '../screens/login/loginAdmin';
 import LoginCreate from '../screens/login/loginCreate';
@@ -56,6 +59,27 @@ export const routes: IRoutes[] = [
         layout: LayoutAdmin,
         order: 0,
         routeLabel: 'Admin'
+    },
+    {
+        adminRole: true,
+        component: QuestaoCriar,
+        layout: LayoutAdmin,
+        order: 0,
+        routeLabel: 'Questão Criar'
+    },
+    {
+        adminRole: true,
+        component: QuestaoEditar,
+        layout: LayoutAdmin,
+        order: 0,
+        routeLabel: 'Questão Editar'
+    },
+    {
+        adminRole: true,
+        component: QuestoesListar,
+        layout: LayoutAdmin,
+        order: 0,
+        routeLabel: 'Questões Listar'
     },
     // USER
     {
