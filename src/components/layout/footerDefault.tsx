@@ -8,7 +8,7 @@ export function FooterDefault(): ReactElement {
     return (
         <>
             <P color={variable.colorWhite} textAlign="center">
-                Footer
+                Quiz IT
             </P>
         </>
     );

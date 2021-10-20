@@ -6,6 +6,7 @@ import { CommonActions, useNavigation, useRoute } from '@react-navigation/native
 import { Button } from 'react-native-elements';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
+import { IQuestoes } from '../../entities/questoes';
 import { IInputRadioItems } from '../../interface';
 
 import { Spacer } from '../../components/layout/spacer';
@@ -52,7 +53,7 @@ function Questoes(): ReactElement {
     // STATE
     const [stateQuestaoAtual, setStateQuestaoAtual] = useState<Record<string, any>>();
     const [stateQuestaoAtualNumero, setStateQuestaoAtualNumero] = useState(1);
-    const [stateQuestoes, setStateQuestoes] = useState<Record<string, any>[]>([]);
+    const [stateQuestoes, setStateQuestoes] = useState<IQuestoes[]>([]);
     const [stateQuestoesTotal, setStateQuestoesTotal] = useState(0);
     const [stateRespostas, stateSetRadioItems] = useState<IInputRadioItems[]>([]);
     const [stateRespostaSelecionada, stateSetRespostaSelecionada] = useState(initialValueRespostaSelecionada);
@@ -67,7 +68,7 @@ function Questoes(): ReactElement {
                     .then((querySnapshot: Record<string, any>) => {
                         setStateQuestoesTotal(querySnapshot.size);
 
-                        const questoesArray: Record<string, any>[] = [];
+                        const questoesArray: IQuestoes[] = [];
 
                         querySnapshot.forEach((documentSnapshot: any) => {
                             questoesArray.push(documentSnapshot.data());

@@ -44,3 +44,13 @@ export const inputSecondary = StyleSheet.create({
         borderTopWidth: 1
     }
 });
+
+export const pickerPrimary = StyleSheet.create({
+    containerStyle: {
+        backgroundColor: variable.colorWhite,
+        borderColor: variable.colorGrayLight,
+        borderRadius: variable.borderRadius,
+        borderStyle: 'solid',
+        borderWidth: 1
+    }
+});
