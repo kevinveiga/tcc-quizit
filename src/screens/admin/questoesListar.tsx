@@ -1,10 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
 
-import { IQuestoes } from '../../entities/questoes';
+import { IQuestao } from '../../entities/questao';
 import { IQuestoesCategorias } from '../../interface';
 
 import { HorizontalLine } from '../../components/layout/line';
@@ -15,6 +16,9 @@ import { questoesCategorias } from '../../questoesCategorias';
 import { pickerPrimary } from '../../styles/form';
 import { layout } from '../../styles/layout';
 import { variable } from '../../styles/variable';
+
+import SvgEdit from '../../assets/svg/svg-edit.svg';
+import SvgTrash from '../../assets/svg/svg-trash.svg';
 
 function QuestoesListar(): ReactElement {
     // STYLE
@@ -47,10 +51,14 @@ function QuestoesListar(): ReactElement {
         }
     });
 
+    // CONTEXT
+    const navigation = useNavigation();
+
     // STATE
-    const [stateQuestoes, setStateQuestoes] = useState<IQuestoes[]>([]);
+    const [stateQuestoes, setStateQuestoes] = useState<IQuestao[]>([]);
     const [stateSelectedItem, setStateSelectedItem] = useState(null);
 
+    // DATA
     useEffect(() => {
         if (stateSelectedItem) {
             const questoes = async (): Promise<void> => {
@@ -58,7 +66,7 @@ function QuestoesListar(): ReactElement {
                     .collection(`questoes${(stateSelectedItem as string).toLowerCase()}`)
                     .get()
                     .then((querySnapshot: Record<string, any>) => {
-                        const questoesArray: IQuestoes[] = [];
+                        const questoesArray: IQuestao[] = [];
 
                         querySnapshot.forEach((documentSnapshot: any) => {
                             questoesArray.push(documentSnapshot.data());
@@ -69,6 +77,8 @@ function QuestoesListar(): ReactElement {
             };
 
             questoes().catch((err: any) => console.error(err));
+        } else {
+            setStateQuestoes([]);
         }
 
         return undefined;
@@ -88,6 +98,8 @@ function QuestoesListar(): ReactElement {
 
                     <View style={pickerPrimary.containerStyle}>
                         <Picker onValueChange={(itemValue): void => setStateSelectedItem(itemValue)} selectedValue={stateSelectedItem}>
+                            <Picker.Item label="Selecione" value="" />
+
                             {questoesCategorias
                                 .sort((a, b) => {
                                     return (a.order || 0) - (b.order || 0);
@@ -100,33 +112,52 @@ function QuestoesListar(): ReactElement {
 
                     <Spacer />
 
-                    <View style={styles.questoes}>
-                        {stateQuestoes
-                            .sort((a, b) => {
-                                return (a.numeroquestao || 0) - (b.numeroquestao || 0);
-                            })
-                            .map(({ codquestao, questao }: IQuestoes) => {
-                                return (
-                                    <View key={codquestao}>
-                                        <Spacer />
+                    {stateQuestoes.length > 0 ? (
+                        <View style={styles.questoes}>
+                            {stateQuestoes
+                                .sort((a, b) => {
+                                    return (a.numeroquestao || 0) - (b.numeroquestao || 0);
+                                })
+                                .map(({ catquestao, codquestao, questao }: IQuestao) => {
+                                    return (
+                                        <View key={codquestao}>
+                                            <Spacer />
 
-                                        <View style={styles.questao}>
-                                            <View style={styles.questaoTitle}>
-                                                <P>{`${questao.substring(0, 70)}...`}</P>
+                                            <View style={styles.questao}>
+                                                <View style={styles.questaoTitle}>
+                                                    <P>{`${questao.substring(0, 70)}...`}</P>
+                                                </View>
+
+                                                <View style={styles.questaoBotoes}>
+                                                    <TouchableOpacity
+                                                        onPress={(): any =>
+                                                            navigation.dispatch(
+                                                                CommonActions.navigate({
+                                                                    name: 'Questão Editar',
+                                                                    params: { categoria: catquestao, id: codquestao }
+                                                                })
+                                                            )
+                                                        }
+                                                    >
+                                                        <SvgEdit height="25px" width="25px" fill={variable.colorPrimary} />
+                                                    </TouchableOpacity>
+
+                                                    <Spacer width={15} />
+
+                                                    <TouchableOpacity onPress={(): any => null}>
+                                                        <SvgTrash height="25px" width="25px" fill={variable.colorPrimary} />
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
 
-                                            <View style={styles.questaoBotoes}>
-                                                <P>Botoes</P>
-                                            </View>
+                                            <Spacer />
+
+                                            <HorizontalLine />
                                         </View>
-
-                                        <Spacer />
-
-                                        <HorizontalLine />
-                                    </View>
-                                );
-                            })}
-                    </View>
+                                    );
+                                })}
+                        </View>
+                    ) : null}
                 </View>
             </ScrollView>
         </View>

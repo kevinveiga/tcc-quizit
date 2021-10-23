@@ -1,4 +1,4 @@
-export interface IQuestoes {
+export interface IQuestao {
     alt1: string;
     alt2: string;
     alt3: string;

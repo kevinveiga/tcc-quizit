@@ -72,7 +72,8 @@ export const routes: IRoutes[] = [
         component: QuestaoEditar,
         layout: LayoutAdmin,
         order: 0,
-        routeLabel: 'Questão Editar'
+        routeLabel: 'Questão Editar',
+        showInMenu: false
     },
     {
         adminRole: true,
