@@ -139,7 +139,7 @@ export function InputDefault({
     cbFunction,
     label,
     leftIcon,
-    maxLength = 200,
+    maxLength = 300,
     name = 'default',
     placeholder,
     rightIcon,

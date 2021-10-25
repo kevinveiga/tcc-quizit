@@ -6,7 +6,7 @@ export interface IQuestao {
     alt5: string;
     altc: string;
     catquestao: string;
-    codquestao: string;
+    id?: number;
     numeroquestao: number;
     questao: string;
 }

@@ -69,7 +69,7 @@ function QuestoesListar(): ReactElement {
                         const questoesArray: IQuestao[] = [];
 
                         querySnapshot.forEach((documentSnapshot: any) => {
-                            questoesArray.push(documentSnapshot.data());
+                            questoesArray.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
                         });
 
                         setStateQuestoes(questoesArray);
@@ -118,9 +118,9 @@ function QuestoesListar(): ReactElement {
                                 .sort((a, b) => {
                                     return (a.numeroquestao || 0) - (b.numeroquestao || 0);
                                 })
-                                .map(({ catquestao, codquestao, questao }: IQuestao) => {
+                                .map(({ catquestao, id, questao }: IQuestao) => {
                                     return (
-                                        <View key={codquestao}>
+                                        <View key={id}>
                                             <Spacer />
 
                                             <View style={styles.questao}>
@@ -134,7 +134,7 @@ function QuestoesListar(): ReactElement {
                                                             navigation.dispatch(
                                                                 CommonActions.navigate({
                                                                     name: 'Questão Editar',
-                                                                    params: { categoria: catquestao, id: codquestao }
+                                                                    params: { categoria: catquestao, id: id }
                                                                 })
                                                             )
                                                         }

@@ -17,7 +17,7 @@ export interface IFormQuestao {
     alt5: string;
     altc: string;
     catquestao?: string;
-    codquestao?: string;
+    id?: number;
     numeroquestao?: number;
     questao: string;
 }

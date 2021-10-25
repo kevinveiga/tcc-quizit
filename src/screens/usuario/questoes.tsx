@@ -55,7 +55,7 @@ function Questoes(): ReactElement {
     const [stateQuestaoAtualNumero, setStateQuestaoAtualNumero] = useState(1);
     const [stateQuestoes, setStateQuestoes] = useState<IQuestao[]>([]);
     const [stateQuestoesTotal, setStateQuestoesTotal] = useState(0);
-    const [stateRespostas, stateSetRadioItems] = useState<IInputRadioItems[]>([]);
+    const [stateRadioItems, stateSetRadioItems] = useState<IInputRadioItems[]>([]);
     const [stateRespostaSelecionada, stateSetRespostaSelecionada] = useState(initialValueRespostaSelecionada);
 
     // DATA
@@ -148,7 +148,7 @@ function Questoes(): ReactElement {
 
                             <View>
                                 <RadioForm>
-                                    {stateRespostas.map(({ id, label, value }: IInputRadioItems, index) => {
+                                    {stateRadioItems.map(({ id, label, value }: IInputRadioItems, index) => {
                                         const onPress = (v: string, i: number): any => {
                                             stateSetRespostaSelecionada({ value: v, valueIndex: i });
                                         };
