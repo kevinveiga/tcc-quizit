@@ -90,8 +90,12 @@ function QuestaoCriar(): ReactElement {
     const handleSubmit: SubmitHandler<IFormQuestao> = async (data) => {
         try {
             const schema = Yup.object().shape({
-                email: Yup.string().email().required(),
-                password: Yup.string().min(6).required()
+                alt1: Yup.string().required(),
+                alt2: Yup.string().required(),
+                alt3: Yup.string().required(),
+                alt4: Yup.string().required(),
+                alt5: Yup.string().required(),
+                questao: Yup.string().required()
             });
 
             await schema

@@ -10,6 +10,8 @@ export interface IFormLogin {
 }
 
 export interface IFormQuestao {
+    [key: string]: string | number | undefined;
+
     alt1: string;
     alt2: string;
     alt3: string;

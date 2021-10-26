@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
-import { useRoute } from '@react-navigation/native';
+import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { Button } from 'react-native-elements';
@@ -57,6 +57,7 @@ function QuestaoEditar(): ReactElement {
 
     // CONTEXT
     const route: Record<string, any> = useRoute();
+    const navigation = useNavigation();
 
     // REF
     const formRef = useRef<FormHandles>(null);
@@ -91,8 +92,12 @@ function QuestaoEditar(): ReactElement {
     const handleSubmit: SubmitHandler<IFormQuestao> = async (data) => {
         try {
             const schema = Yup.object().shape({
-                email: Yup.string().email().required(),
-                password: Yup.string().min(6).required()
+                alt1: Yup.string().required(),
+                alt2: Yup.string().required(),
+                alt3: Yup.string().required(),
+                alt4: Yup.string().required(),
+                alt5: Yup.string().required(),
+                questao: Yup.string().required()
             });
 
             await schema
@@ -100,7 +105,37 @@ function QuestaoEditar(): ReactElement {
                     abortEarly: false
                 })
                 .then(() => {
-                    // actions?.login(data).catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]));
+                    const altc = stateAlternativaCerta;
+                    const newData = { ...data, altc: altc };
+
+                    if (route.params?.categoria && route.params?.id) {
+                        const questaoEditar = async (): Promise<void> => {
+                            await firestore()
+                                .collection(`questoes${(route.params?.categoria as string).toLowerCase()}`)
+                                .doc((route.params?.id as string).toLowerCase())
+                                .update({
+                                    alt1: newData.alt1,
+                                    alt2: newData.alt2,
+                                    alt3: newData.alt3,
+                                    alt4: newData.alt4,
+                                    alt5: newData.alt5,
+                                    altc: newData.altc,
+                                    questao: newData.questao
+                                })
+                                .then(() => {
+                                    Alert.alert('Questão atualizada!', '', [
+                                        {
+                                            text: 'Fechar',
+                                            onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
+                                        }
+                                    ]);
+                                });
+                        };
+
+                        questaoEditar().catch((err: any) => console.error(err));
+                    }
+
+                    // actions?.login(data).catch((loginError) => Alert.alert('Atualizado:', loginError.toString(), [{ text: 'Fechar' }]));
                 });
 
             formRef.current?.setErrors({});
@@ -219,7 +254,7 @@ function QuestaoEditar(): ReactElement {
                                 <Button
                                     buttonStyle={button.buttonPrimary}
                                     onPress={(): any => formRef.current?.submitForm()}
-                                    title="Editar"
+                                    title="Atualizar"
                                     type="solid"
                                 />
                             </View>

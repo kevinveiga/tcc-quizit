@@ -22,7 +22,6 @@ Yup.setLocale({
         min: 'Mínimo de ${min}',
         moreThan: 'Deve ser maior que ${more}',
         negative: 'Deve ser um número negativo',
-        notEqual: 'Não pode ser igual à ${notEqual}',
         positive: 'Deve ser um número posítivo'
     },
     string: {
