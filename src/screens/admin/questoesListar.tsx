@@ -99,7 +99,9 @@ function QuestoesListar(): ReactElement {
 
     // DATA
     useEffect(() => {
-        return setStateSelectedItem(null);
+        setStateSelectedItem(null);
+
+        return undefined;
     }, []);
 
     useEffect(() => {

@@ -14,7 +14,7 @@ import { questoesCategorias } from '../../questoesCategorias';
 
 import { InputDefault } from '../../components/form/form';
 import { Spacer } from '../../components/layout/spacer';
-import { Title2, Title4 } from '../../components/text/text';
+import { Span, Title2, Title4 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { pickerPrimary } from '../../styles/form';
@@ -46,6 +46,9 @@ function QuestaoCriar(): ReactElement {
         },
         alternativaCheckbox: {
             paddingTop: 12,
+            width: '15%'
+        },
+        alternativaCheckboxTitulo: {
             width: '15%'
         },
         form: {
@@ -196,6 +199,18 @@ function QuestaoCriar(): ReactElement {
                                         <InputDefault maxLength={1000} multiline={true} name="questao" placeholder="Questão" />
                                     </View>
                                 </View>
+
+                                <View style={styles.alternativa}>
+                                    <View style={styles.alternativaCheckboxTitulo}>
+                                        <Span>Certa</Span>
+                                    </View>
+
+                                    <View style={styles.alternativaCampo}>
+                                        <Span>Alternativas</Span>
+                                    </View>
+                                </View>
+
+                                <Spacer />
 
                                 <View style={styles.alternativa}>
                                     <View style={styles.alternativaCheckbox}>

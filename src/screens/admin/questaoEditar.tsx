@@ -12,7 +12,7 @@ import { IFormQuestao } from '../../interface';
 
 import { InputDefault } from '../../components/form/form';
 import { Spacer } from '../../components/layout/spacer';
-import { Title2 } from '../../components/text/text';
+import { Span, Title2 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { layout } from '../../styles/layout';
@@ -43,6 +43,9 @@ function QuestaoEditar(): ReactElement {
         },
         alternativaCheckbox: {
             paddingTop: 12,
+            width: '15%'
+        },
+        alternativaCheckboxTitulo: {
             width: '15%'
         },
         form: {
@@ -169,12 +172,24 @@ function QuestaoEditar(): ReactElement {
                             </View>
 
                             <View style={styles.alternativa}>
+                                <View style={styles.alternativaCheckboxTitulo}>
+                                    <Span>Certa</Span>
+                                </View>
+
+                                <View style={styles.alternativaCampo}>
+                                    <Span>Alternativas</Span>
+                                </View>
+                            </View>
+
+                            <Spacer />
+
+                            <View style={styles.alternativa}>
                                 <View style={styles.alternativaCheckbox}>
                                     <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt1')}>
                                         {stateAlternativaCerta === 'alt1' ? (
-                                            <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            <SvgCheckboxMark height="3px" width="3px" fill={variable.colorPrimary} />
                                         ) : (
-                                            <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            <SvgCheckboxUnmark height="3px" width="3px" fill={variable.colorPrimary} />
                                         )}
                                     </TouchableOpacity>
                                 </View>
