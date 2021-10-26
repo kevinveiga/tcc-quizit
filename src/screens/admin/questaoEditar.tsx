@@ -134,8 +134,6 @@ function QuestaoEditar(): ReactElement {
 
                         questaoEditar().catch((err: any) => console.error(err));
                     }
-
-                    // actions?.login(data).catch((loginError) => Alert.alert('Atualizado:', loginError.toString(), [{ text: 'Fechar' }]));
                 });
 
             formRef.current?.setErrors({});

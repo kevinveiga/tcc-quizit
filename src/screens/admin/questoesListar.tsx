@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
@@ -7,11 +7,11 @@ import { Picker } from '@react-native-picker/picker';
 
 import { IQuestao } from '../../entities/questao';
 import { IQuestoesCategorias } from '../../interface';
+import { questoesCategorias } from '../../questoesCategorias';
 
 import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
 import { P, Title2, Title4 } from '../../components/text/text';
-import { questoesCategorias } from '../../questoesCategorias';
 
 import { pickerPrimary } from '../../styles/form';
 import { layout } from '../../styles/layout';
@@ -58,25 +58,53 @@ function QuestoesListar(): ReactElement {
     const [stateQuestoes, setStateQuestoes] = useState<IQuestao[]>([]);
     const [stateSelectedItem, setStateSelectedItem] = useState(null);
 
-    // DATA
-    useEffect(() => {
+    // FUNCTION
+    const listarQuestoes = async (categoria: string): Promise<void> => {
+        await firestore()
+            .collection(`questoes${categoria.toLowerCase()}`)
+            .get()
+            .then((querySnapshot: Record<string, any>) => {
+                const questoesArray: IQuestao[] = [];
+
+                querySnapshot.forEach((documentSnapshot: any) => {
+                    questoesArray.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
+                });
+
+                setStateQuestoes(questoesArray);
+            });
+    };
+
+    const removerQuestao = (id: any): void => {
         if (stateSelectedItem) {
-            const questoes = async (): Promise<void> => {
+            const questao = async (): Promise<void> => {
                 await firestore()
                     .collection(`questoes${(stateSelectedItem as string).toLowerCase()}`)
-                    .get()
-                    .then((querySnapshot: Record<string, any>) => {
-                        const questoesArray: IQuestao[] = [];
+                    .doc(id)
+                    .delete()
+                    .then(() => {
+                        listarQuestoes(stateSelectedItem).catch((err: any) => console.error(err));
 
-                        querySnapshot.forEach((documentSnapshot: any) => {
-                            questoesArray.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
-                        });
-
-                        setStateQuestoes(questoesArray);
+                        Alert.alert('Questão removida!', '', [
+                            {
+                                text: 'Fechar',
+                                onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
+                            }
+                        ]);
                     });
             };
 
-            questoes().catch((err: any) => console.error(err));
+            questao().catch((err: any) => console.error(err));
+        }
+    };
+
+    // DATA
+    useEffect(() => {
+        return setStateSelectedItem(null);
+    }, []);
+
+    useEffect(() => {
+        if (stateSelectedItem) {
+            listarQuestoes(stateSelectedItem).catch((err: any) => console.error(err));
         } else {
             setStateQuestoes([]);
         }
@@ -88,7 +116,7 @@ function QuestoesListar(): ReactElement {
         <View style={layout.container}>
             <ScrollView>
                 <View style={styles.questoesListar}>
-                    <Title2>Admin</Title2>
+                    <Title2>Questões</Title2>
 
                     <Spacer />
 
@@ -125,7 +153,7 @@ function QuestoesListar(): ReactElement {
 
                                             <View style={styles.questao}>
                                                 <View style={styles.questaoTitle}>
-                                                    <P>{`${questao.substring(0, 70)}...`}</P>
+                                                    <P>{questao.length > 70 ? `${questao.substring(0, 70)}...` : questao}</P>
                                                 </View>
 
                                                 <View style={styles.questaoBotoes}>
@@ -144,7 +172,7 @@ function QuestoesListar(): ReactElement {
 
                                                     <Spacer width={15} />
 
-                                                    <TouchableOpacity onPress={(): any => null}>
+                                                    <TouchableOpacity onPress={(): any => removerQuestao(id)}>
                                                         <SvgTrash height="25px" width="25px" fill={variable.colorPrimary} />
                                                     </TouchableOpacity>
                                                 </View>

@@ -1,20 +1,23 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
-import { useRoute } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { Button } from 'react-native-elements';
 
 import Yup from '../../helpers/yup';
-import { IFormQuestao } from '../../interface';
+import { IFormQuestao, IQuestoesCategorias } from '../../interface';
+import { questoesCategorias } from '../../questoesCategorias';
 
 import { InputDefault } from '../../components/form/form';
 import { Spacer } from '../../components/layout/spacer';
-import { Title2 } from '../../components/text/text';
+import { Title2, Title4 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
+import { pickerPrimary } from '../../styles/form';
 import { layout } from '../../styles/layout';
 import { variable } from '../../styles/variable';
 
@@ -55,27 +58,29 @@ function QuestaoCriar(): ReactElement {
         }
     });
 
-    // CONTEXT
-    const route: Record<string, any> = useRoute();
-
     // REF
     const formRef = useRef<FormHandles>(null);
 
+    // CONTEXT
+    const navigation = useNavigation();
+
     // STATE
     const [stateAlternativaCerta, setStateAlternativaCerta] = useState('');
+    const [stateUltimoNumeroQuestao, setStateUltimoNumeroQuestao] = useState(0);
+    const [stateSelectedItem, setStateSelectedItem] = useState(null);
 
     // DATA
     useEffect(() => {
-        if (route.params?.categoria && route.params?.id) {
+        if (stateSelectedItem) {
             const questoes = async (): Promise<void> => {
                 await firestore()
-                    .collection(`questoes${(route.params?.categoria as string).toLowerCase()}`)
+                    .collection(`questoes${(stateSelectedItem as string).toLowerCase()}`)
                     .orderBy('numeroquestao', 'desc')
                     .limit(1)
                     .get()
                     .then((querySnapshot: Record<string, any>) => {
                         querySnapshot.forEach((documentSnapshot: any) => {
-                            console.log('> ', documentSnapshot.data().numeroquestao);
+                            setStateUltimoNumeroQuestao(documentSnapshot.data().numeroquestao);
                         });
                     });
             };
@@ -84,7 +89,7 @@ function QuestaoCriar(): ReactElement {
         }
 
         return undefined;
-    }, [route.params?.categoria, route.params?.id]);
+    }, [stateSelectedItem]);
 
     // FORM
     const handleSubmit: SubmitHandler<IFormQuestao> = async (data) => {
@@ -103,7 +108,42 @@ function QuestaoCriar(): ReactElement {
                     abortEarly: false
                 })
                 .then(() => {
-                    // actions?.login(data).catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]));
+                    const altc = stateAlternativaCerta;
+                    const categoria = stateSelectedItem;
+                    const newData = { ...data, altc: altc };
+                    const ultimoNumeroQuestao = stateUltimoNumeroQuestao + 1;
+
+                    if (categoria) {
+                        const questaoInserir = async (): Promise<void> => {
+                            await firestore()
+                                .collection(`questoes${(categoria as string).toLowerCase()}`)
+                                .add({
+                                    alt1: newData.alt1,
+                                    alt2: newData.alt2,
+                                    alt3: newData.alt3,
+                                    alt4: newData.alt4,
+                                    alt5: newData.alt5,
+                                    altc: newData.altc,
+                                    catquestao: categoria,
+                                    numeroquestao: ultimoNumeroQuestao,
+                                    questao: newData.questao
+                                })
+                                .then(() => {
+                                    setStateAlternativaCerta('');
+
+                                    formRef.current?.reset();
+
+                                    Alert.alert('Questão inserida!', '', [
+                                        {
+                                            text: 'Fechar',
+                                            onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
+                                        }
+                                    ]);
+                                });
+                        };
+
+                        questaoInserir().catch((err: any) => console.error(err));
+                    }
                 });
 
             formRef.current?.setErrors({});
@@ -128,108 +168,128 @@ function QuestaoCriar(): ReactElement {
 
                     <Spacer />
 
-                    <View style={styles.form}>
-                        <Spacer height={10} />
+                    <Title4>Selecione a categoria:</Title4>
 
-                        <Form initialData={initialData} onSubmit={handleSubmit} ref={formRef}>
-                            <View>
-                                <View>
-                                    <InputDefault maxLength={1000} multiline={true} name="questao" placeholder="Questão" />
-                                </View>
-                            </View>
+                    <View style={pickerPrimary.containerStyle}>
+                        <Picker onValueChange={(itemValue): void => setStateSelectedItem(itemValue)} selectedValue={stateSelectedItem}>
+                            <Picker.Item label="Selecione" value="" />
 
-                            <View style={styles.alternativa}>
-                                <View style={styles.alternativaCheckbox}>
-                                    <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt1')}>
-                                        {stateAlternativaCerta === 'alt1' ? (
-                                            <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        ) : (
-                                            <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        )}
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.alternativaCampo}>
-                                    <InputDefault name="alt1" placeholder="Alternativa 1" />
-                                </View>
-                            </View>
-
-                            <View style={styles.alternativa}>
-                                <View style={styles.alternativaCheckbox}>
-                                    <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt2')}>
-                                        {stateAlternativaCerta === 'alt2' ? (
-                                            <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        ) : (
-                                            <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        )}
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.alternativaCampo}>
-                                    <InputDefault name="alt2" placeholder="Alternativa 2" />
-                                </View>
-                            </View>
-
-                            <View style={styles.alternativa}>
-                                <View style={styles.alternativaCheckbox}>
-                                    <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt3')}>
-                                        {stateAlternativaCerta === 'alt3' ? (
-                                            <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        ) : (
-                                            <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        )}
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.alternativaCampo}>
-                                    <InputDefault name="alt3" placeholder="Alternativa 3" />
-                                </View>
-                            </View>
-
-                            <View style={styles.alternativa}>
-                                <View style={styles.alternativaCheckbox}>
-                                    <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt4')}>
-                                        {stateAlternativaCerta === 'alt4' ? (
-                                            <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        ) : (
-                                            <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        )}
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.alternativaCampo}>
-                                    <InputDefault name="alt4" placeholder="Alternativa 4" />
-                                </View>
-                            </View>
-
-                            <View style={styles.alternativa}>
-                                <View style={styles.alternativaCheckbox}>
-                                    <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt5')}>
-                                        {stateAlternativaCerta === 'alt5' ? (
-                                            <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        ) : (
-                                            <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
-                                        )}
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.alternativaCampo}>
-                                    <InputDefault name="alt5" placeholder="Alternativa 5" />
-                                </View>
-                            </View>
-
-                            <View>
-                                <Button
-                                    buttonStyle={button.buttonPrimary}
-                                    onPress={(): any => formRef.current?.submitForm()}
-                                    title="Editar"
-                                    type="solid"
-                                />
-                            </View>
-                        </Form>
-
-                        <Spacer height={10} />
+                            {questoesCategorias
+                                .sort((a, b) => {
+                                    return (a.order || 0) - (b.order || 0);
+                                })
+                                .map(({ id, name }: IQuestoesCategorias) => {
+                                    return <Picker.Item key={id} label={name} value={name} />;
+                                })}
+                        </Picker>
                     </View>
+
+                    <Spacer />
+
+                    {stateSelectedItem ? (
+                        <View style={styles.form}>
+                            <Spacer height={10} />
+
+                            <Form initialData={initialData} onSubmit={handleSubmit} ref={formRef}>
+                                <View>
+                                    <View>
+                                        <InputDefault maxLength={1000} multiline={true} name="questao" placeholder="Questão" />
+                                    </View>
+                                </View>
+
+                                <View style={styles.alternativa}>
+                                    <View style={styles.alternativaCheckbox}>
+                                        <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt1')}>
+                                            {stateAlternativaCerta === 'alt1' ? (
+                                                <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            ) : (
+                                                <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            )}
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={styles.alternativaCampo}>
+                                        <InputDefault name="alt1" placeholder="Alternativa 1" />
+                                    </View>
+                                </View>
+
+                                <View style={styles.alternativa}>
+                                    <View style={styles.alternativaCheckbox}>
+                                        <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt2')}>
+                                            {stateAlternativaCerta === 'alt2' ? (
+                                                <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            ) : (
+                                                <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            )}
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={styles.alternativaCampo}>
+                                        <InputDefault name="alt2" placeholder="Alternativa 2" />
+                                    </View>
+                                </View>
+
+                                <View style={styles.alternativa}>
+                                    <View style={styles.alternativaCheckbox}>
+                                        <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt3')}>
+                                            {stateAlternativaCerta === 'alt3' ? (
+                                                <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            ) : (
+                                                <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            )}
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={styles.alternativaCampo}>
+                                        <InputDefault name="alt3" placeholder="Alternativa 3" />
+                                    </View>
+                                </View>
+
+                                <View style={styles.alternativa}>
+                                    <View style={styles.alternativaCheckbox}>
+                                        <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt4')}>
+                                            {stateAlternativaCerta === 'alt4' ? (
+                                                <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            ) : (
+                                                <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            )}
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={styles.alternativaCampo}>
+                                        <InputDefault name="alt4" placeholder="Alternativa 4" />
+                                    </View>
+                                </View>
+
+                                <View style={styles.alternativa}>
+                                    <View style={styles.alternativaCheckbox}>
+                                        <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt5')}>
+                                            {stateAlternativaCerta === 'alt5' ? (
+                                                <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            ) : (
+                                                <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
+                                            )}
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={styles.alternativaCampo}>
+                                        <InputDefault name="alt5" placeholder="Alternativa 5" />
+                                    </View>
+                                </View>
+
+                                <View>
+                                    <Button
+                                        buttonStyle={button.buttonPrimary}
+                                        onPress={(): any => formRef.current?.submitForm()}
+                                        title="Inserir"
+                                        type="solid"
+                                    />
+                                </View>
+                            </Form>
+
+                            <Spacer height={10} />
+                        </View>
+                    ) : null}
                 </View>
             </ScrollView>
         </View>
