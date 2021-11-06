@@ -10,7 +10,7 @@ import { IQuestao } from '../../entities/questao';
 import { IInputRadioItems } from '../../interface';
 
 import { Spacer } from '../../components/layout/spacer';
-import { P, Title1, Title3 } from '../../components/text/text';
+import { P, Title2, Title4 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { layout } from '../../styles/layout';
@@ -55,8 +55,8 @@ function Questoes(): ReactElement {
     const [stateQuestaoAtualNumero, setStateQuestaoAtualNumero] = useState(1);
     const [stateQuestoes, setStateQuestoes] = useState<IQuestao[]>([]);
     const [stateQuestoesTotal, setStateQuestoesTotal] = useState(0);
-    const [stateRadioItems, stateSetRadioItems] = useState<IInputRadioItems[]>([]);
-    const [stateRespostaSelecionada, stateSetRespostaSelecionada] = useState(initialValueRespostaSelecionada);
+    const [stateRadioItems, setStateRadioItems] = useState<IInputRadioItems[]>([]);
+    const [stateRespostaSelecionada, setStateRespostaSelecionada] = useState(initialValueRespostaSelecionada);
 
     // DATA
     useEffect(() => {
@@ -79,7 +79,13 @@ function Questoes(): ReactElement {
             };
 
             questoes().catch((err: any) => console.error(err));
+        }
 
+        return undefined;
+    }, [route.params?.name]);
+
+    useEffect(() => {
+        if (route.params?.name) {
             const respostas = async (): Promise<void> => {
                 await firestore()
                     .collection(`questoes${(route.params?.name as string).toLowerCase()}`)
@@ -88,15 +94,22 @@ function Questoes(): ReactElement {
                     .then((querySnapshot) => {
                         querySnapshot.forEach((documentSnapshot: any) => {
                             if (documentSnapshot?.data()) {
-                                const respostasArray: any = [];
+                                const obj = documentSnapshot.data();
 
-                                for (const key in documentSnapshot.data()) {
-                                    if (key.startsWith('alt') && key !== 'altc') {
-                                        respostasArray.push({ id: key, label: documentSnapshot.data()[key], value: documentSnapshot.data()[key] });
-                                    }
-                                }
+                                const alternativasArray = Object.keys(obj)
+                                    .filter((key) => {
+                                        return key === 'alt1' || key === 'alt2' || key === 'alt3' || key === 'alt4' || key === 'alt5';
+                                    })
+                                    .sort((a: any, b: any) => {
+                                        return a.localeCompare(b, 'br');
+                                    })
+                                    .map((key) => {
+                                        const alternativa = obj[key];
 
-                                stateSetRadioItems(respostasArray);
+                                        return { id: key, label: alternativa, value: alternativa };
+                                    });
+
+                                setStateRadioItems(alternativasArray);
 
                                 setStateQuestaoAtual(documentSnapshot.data());
                             }
@@ -111,32 +124,47 @@ function Questoes(): ReactElement {
     }, [route.params?.name, stateQuestaoAtualNumero]);
 
     // FUNCTION
+    const respostas = (newQuestaoAtualNumero: number): IQuestao[] => {
+        const respostaSelecionada = stateRespostaSelecionada.value;
+
+        const questoes = stateQuestoes.map((questao) => {
+            if (questao.numeroquestao === stateQuestaoAtualNumero) {
+                questao = { ...questao, alts: respostaSelecionada };
+            }
+
+            return questao;
+        });
+
+        setStateQuestoes(questoes);
+        setStateQuestaoAtualNumero(newQuestaoAtualNumero);
+        setStateRespostaSelecionada(initialValueRespostaSelecionada);
+
+        return questoes;
+    };
+
     const questaoAnterior = (): void => {
-        setStateQuestaoAtualNumero(stateQuestaoAtualNumero - 1);
-        stateSetRespostaSelecionada(initialValueRespostaSelecionada);
+        respostas(stateQuestaoAtualNumero - 1);
     };
 
     const questaoProxima = (): void => {
-        setStateQuestaoAtualNumero(stateQuestaoAtualNumero + 1);
-        stateSetRespostaSelecionada(initialValueRespostaSelecionada);
+        respostas(stateQuestaoAtualNumero + 1);
     };
 
     const resultado = (): void => {
-        // TODO
-        navigation.dispatch(CommonActions.navigate({ name: 'Resultado', params: { questoes: null } }));
+        navigation.dispatch(CommonActions.navigate({ name: 'Resultado', params: { questoes: respostas(1) } }));
     };
 
     return (
         <View style={layout.container}>
             <ScrollView>
                 <View style={styles.questoes}>
-                    <Title1 textAlign="center">QUIZ IT</Title1>
+                    <Title2 textAlign="center">QUIZ IT</Title2>
 
                     <Spacer />
 
-                    <Title3 textAlign="center">
+                    <Title4 textAlign="center">
                         Questão {stateQuestaoAtualNumero} de {stateQuestoesTotal} - {route.params?.name}.
-                    </Title3>
+                    </Title4>
 
                     <Spacer />
 
@@ -150,7 +178,7 @@ function Questoes(): ReactElement {
                                 <RadioForm>
                                     {stateRadioItems.map(({ id, label, value }: IInputRadioItems, index) => {
                                         const onPress = (v: string, i: number): any => {
-                                            stateSetRespostaSelecionada({ value: v, valueIndex: i });
+                                            setStateRespostaSelecionada({ value: v, valueIndex: i });
                                         };
 
                                         return (
@@ -184,11 +212,17 @@ function Questoes(): ReactElement {
                                 )}
 
                                 {stateQuestaoAtualNumero < stateQuestoesTotal && (
-                                    <Button buttonStyle={button.buttonPrimary} onPress={(): any => questaoProxima()} title="Próxima" type="solid" />
+                                    <Button
+                                        buttonStyle={button.buttonPrimary}
+                                        disabled={stateRespostaSelecionada.valueIndex === -1}
+                                        onPress={(): any => questaoProxima()}
+                                        title="Próxima"
+                                        type="solid"
+                                    />
                                 )}
 
                                 {stateQuestaoAtualNumero === stateQuestoesTotal && (
-                                    <Button buttonStyle={button.buttonPrimary} onPress={(): any => resultado()} title="Finalizar" type="solid" />
+                                    <Button buttonStyle={button.buttonPrimary} onPress={(): any => resultado()} title="Resultado" type="solid" />
                                 )}
                             </View>
                         </View>

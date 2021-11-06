@@ -173,7 +173,14 @@ export function DrawerNavigator(): ReactElement {
                                 },
                                 headerRight: (): ReactElement => {
                                     return (
-                                        <TouchableOpacity onPress={(): any => navigation.goBack()} style={styles.drawerNavigatorRight}>
+                                        <TouchableOpacity
+                                            onPress={(): any =>
+                                                navigation.dispatch(
+                                                    CommonActions.navigate({ name: stateAdminRole ? 'Admin' : 'Categorias Questões' })
+                                                )
+                                            }
+                                            style={styles.drawerNavigatorRight}
+                                        >
                                             <Span>Voltar</Span>
                                         </TouchableOpacity>
                                     );

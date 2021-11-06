@@ -46,7 +46,7 @@ export const variable: IVariable = {
     colorAlert: 'rgba(220, 75, 57, 1)',
     colorError: 'rgba(215, 40, 40, 0.9)',
     colorInfo: 'rgba(0, 187, 238, 1)',
-    colorSuccess: 'rgba(72, 235, 121, 1)',
+    colorSuccess: 'rgba(0, 200, 0, 1)',
     colorWarning: 'rgba(243, 156, 18, 1)',
 
     // Color - App

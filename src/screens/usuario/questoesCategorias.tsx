@@ -8,7 +8,7 @@ import { questoesCategorias } from '../../questoesCategorias';
 import { IQuestoesCategorias } from '../../interface';
 
 import { Spacer } from '../../components/layout/spacer';
-import { Title1, Title3 } from '../../components/text/text';
+import { Title2, Title4 } from '../../components/text/text';
 
 import { button } from '../../styles/button';
 import { layout } from '../../styles/layout';
@@ -30,13 +30,13 @@ function QuestoesCategorias(): ReactElement {
         <View style={layout.container}>
             <ScrollView>
                 <View style={styles.questoesCategorias}>
-                    <Title1 textAlign="center">QUIZ IT</Title1>
+                    <Title2 textAlign="center">QUIZ IT</Title2>
 
                     <Spacer />
 
-                    <Title3 textAlign="center">Selecione a categoria de questões.</Title3>
+                    <Title4 textAlign="center">Selecione a categoria de questões.</Title4>
 
-                    <Spacer height={25} />
+                    <Spacer />
 
                     {questoesCategorias
                         .sort((a, b) => {
