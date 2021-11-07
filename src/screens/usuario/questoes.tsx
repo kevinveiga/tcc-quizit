@@ -111,7 +111,7 @@ function Questoes(): ReactElement {
 
                                 setStateRadioItems(alternativasArray);
 
-                                setStateQuestaoAtual(documentSnapshot.data());
+                                setStateQuestaoAtual(obj);
                             }
                         });
                     });
@@ -135,7 +135,6 @@ function Questoes(): ReactElement {
             return questao;
         });
 
-        setStateQuestoes(questoes);
         setStateQuestaoAtualNumero(newQuestaoAtualNumero);
         setStateRespostaSelecionada(initialValueRespostaSelecionada);
 
@@ -143,11 +142,11 @@ function Questoes(): ReactElement {
     };
 
     const questaoAnterior = (): void => {
-        respostas(stateQuestaoAtualNumero - 1);
+        setStateQuestoes(respostas(stateQuestaoAtualNumero - 1));
     };
 
     const questaoProxima = (): void => {
-        respostas(stateQuestaoAtualNumero + 1);
+        setStateQuestoes(respostas(stateQuestaoAtualNumero + 1));
     };
 
     const resultado = (): void => {
@@ -158,13 +157,13 @@ function Questoes(): ReactElement {
         <View style={layout.container}>
             <ScrollView>
                 <View style={styles.questoes}>
-                    <Title2 textAlign="center">QUIZ IT</Title2>
+                    <Title2 textAlign="center">
+                        Questão {stateQuestaoAtualNumero} de {stateQuestoesTotal} - {route.params?.name}
+                    </Title2>
 
                     <Spacer />
 
-                    <Title4 textAlign="center">
-                        Questão {stateQuestaoAtualNumero} de {stateQuestoesTotal} - {route.params?.name}.
-                    </Title4>
+                    <Title4 textAlign="center">Selecione a alternativa correta</Title4>
 
                     <Spacer />
 

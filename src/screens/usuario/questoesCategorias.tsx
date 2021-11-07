@@ -30,11 +30,11 @@ function QuestoesCategorias(): ReactElement {
         <View style={layout.container}>
             <ScrollView>
                 <View style={styles.questoesCategorias}>
-                    <Title2 textAlign="center">QUIZ IT</Title2>
+                    <Title2 textAlign="center">Categorias</Title2>
 
                     <Spacer />
 
-                    <Title4 textAlign="center">Selecione a categoria de questões.</Title4>
+                    <Title4 textAlign="center">Selecione a categoria de questões:</Title4>
 
                     <Spacer />
 

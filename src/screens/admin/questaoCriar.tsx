@@ -173,6 +173,8 @@ function QuestaoCriar(): ReactElement {
 
                     <Title4>Selecione a categoria:</Title4>
 
+                    <Spacer />
+
                     <View style={pickerPrimary.containerStyle}>
                         <Picker onValueChange={(itemValue): void => setStateSelectedItem(itemValue)} selectedValue={stateSelectedItem}>
                             <Picker.Item label="Selecione" value="" />

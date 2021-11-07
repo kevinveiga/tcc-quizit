@@ -1,11 +1,12 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { useRoute } from '@react-navigation/native';
 import { Button } from 'react-native-elements';
 
 import { IQuestao } from '../../entities/questao';
 
+import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
 import { P, Span, Title2, Title4 } from '../../components/text/text';
 
@@ -19,6 +20,18 @@ import SvgValid from '../../assets/svg/svg-valid.svg';
 function RespostaQuestao({ Alt, Altc, Altn, Alts }: any): ReactElement {
     // STYLE
     const styles = StyleSheet.create({
+        column1: {
+            width: '30%'
+        },
+        column2: {
+            width: '60%'
+        },
+        column3: {
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            paddingTop: 4,
+            width: '10%'
+        },
         questao: {
             flexDirection: 'row',
             flexWrap: 'wrap'
@@ -27,19 +40,25 @@ function RespostaQuestao({ Alt, Altc, Altn, Alts }: any): ReactElement {
 
     return (
         <View style={styles.questao}>
-            {Alt === Alts ? (
-                Altc === Alts ? (
-                    <SvgValid height="16px" width="18px" fill={variable.colorSuccess} stroke={variable.colorSuccess} />
-                ) : (
-                    <SvgInvalid height="16px" width="18px" fill={variable.colorError} stroke={variable.colorError} />
-                )
-            ) : null}
+            <View style={styles.column1}>
+                <Span bold={true}>{`Alternativa ${Altn as number}: `}</Span>
+            </View>
 
-            <Span bold={true}>{`Alternativa ${Altn as number}: `}</Span>
+            <View style={styles.column2}>
+                <Span bold={Alt === Alts} color={Alt === Alts ? (Altc === Alts ? variable.colorSuccess : variable.colorError) : variable.fontColor}>
+                    {Alt}
+                </Span>
+            </View>
 
-            <Span bold={Alt === Alts} color={Alt === Alts ? (Altc === Alts ? variable.colorSuccess : variable.colorError) : variable.fontColor}>
-                {Alt}
-            </Span>
+            <View style={styles.column3}>
+                {Alt === Alts ? (
+                    Altc === Alts ? (
+                        <SvgValid height="14px" width="18px" fill={variable.colorSuccess} stroke={variable.colorSuccess} />
+                    ) : (
+                        <SvgInvalid height="14px" width="18px" fill={variable.colorError} stroke={variable.colorError} />
+                    )
+                ) : null}
+            </View>
         </View>
     );
 }
@@ -47,9 +66,8 @@ function RespostaQuestao({ Alt, Altc, Altn, Alts }: any): ReactElement {
 function Resultado(): ReactElement {
     // STYLE
     const styles = StyleSheet.create({
-        questao: {
-            flexDirection: 'row',
-            flexWrap: 'wrap'
+        export: {
+            alignItems: 'center'
         },
         questoesRespostas: {
             backgroundColor: variable.colorWhite,
@@ -84,11 +102,24 @@ function Resultado(): ReactElement {
         <View style={layout.container}>
             <ScrollView>
                 <View style={styles.resultado}>
-                    <Title2 textAlign="center">QUIZ IT</Title2>
+                    <Title2 textAlign="center">Resultado</Title2>
 
                     <Spacer />
 
-                    <Title4 textAlign="center">Resultado:</Title4>
+                    <View style={styles.export}>
+                        <TouchableOpacity onPress={(): any => null}>
+                            <Title4 textAlign="center">
+                                <Span>Exportar para </Span>
+                                <Span bold={true} color={variable.colorRed}>
+                                    PDF
+                                </Span>
+                            </Title4>
+                        </TouchableOpacity>
+
+                        <View>
+                            <HorizontalLine width={180} />
+                        </View>
+                    </View>
 
                     <Spacer />
 
@@ -98,10 +129,12 @@ function Resultado(): ReactElement {
                                 <View key={questaoResposta.numeroquestao}>
                                     <Spacer />
 
-                                    <View style={styles.questao}>
-                                        <P bold={true}>Questão</P>
+                                    <View>
+                                        <P bold={true}>Questão:</P>
                                         <P>{questaoResposta.questao}</P>
                                     </View>
+
+                                    <Spacer />
 
                                     <RespostaQuestao
                                         Alt={questaoResposta.alt1}
@@ -139,6 +172,8 @@ function Resultado(): ReactElement {
                                     />
 
                                     <Spacer />
+
+                                    <HorizontalLine />
                                 </View>
                             );
                         })}
