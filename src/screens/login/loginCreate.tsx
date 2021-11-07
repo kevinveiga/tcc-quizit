@@ -1,13 +1,12 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useRef } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { Button } from 'react-native-elements';
 
 import { useAuth } from '../../contexts/auth';
-import { IRouteParams } from '../../entities/routeParams';
 import Yup from '../../helpers/yup';
 import { IFormLogin } from '../../interface';
 import { ActionType } from '../../stores/action/actionType';
@@ -43,23 +42,9 @@ function LoginCreate(): ReactElement {
     // CONTEXT
     const { stateAuth, actions } = useAuth();
     const navigation = useNavigation();
-    const route = useRoute();
 
     // STATE
     const { status } = stateAuth;
-    const { routeParams, routeToRedirect } = (route.params as IRouteParams) || {};
-
-    useEffect(() => {
-        if (status === ActionType.LOGGED_IN) {
-            if (routeToRedirect) {
-                navigation.dispatch(CommonActions.navigate({ name: routeToRedirect, params: routeParams }));
-            } else {
-                navigation.dispatch(CommonActions.navigate({ name: 'Categorias Questões' }));
-            }
-        }
-
-        return undefined;
-    }, [navigation, routeParams, routeToRedirect, status]);
 
     // FORM
     const formRef = useRef<FormHandles>(null);
@@ -77,7 +62,10 @@ function LoginCreate(): ReactElement {
                     abortEarly: false
                 })
                 .then(() => {
-                    actions?.loginCreate(data).catch((loginCreateError) => Alert.alert('Erro:', loginCreateError.toString(), [{ text: 'Fechar' }]));
+                    actions
+                        ?.loginCreate(data)
+                        .then(() => navigation.dispatch(CommonActions.navigate({ name: 'Categorias Questões' })))
+                        .catch((loginCreateError) => Alert.alert('Erro:', loginCreateError.toString(), [{ text: 'Fechar' }]));
                 });
 
             formRef.current?.setErrors({});

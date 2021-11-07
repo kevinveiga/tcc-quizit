@@ -3,7 +3,6 @@ import { IRoutes } from '../interface';
 import { LayoutAdmin } from '../components/layout/layoutAdmin';
 import { LayoutNoFooter } from '../components/layout/layoutNoFooter';
 
-import Admin from '../screens/admin/admin';
 import QuestaoCriar from '../screens/admin/questaoCriar';
 import QuestaoEditar from '../screens/admin/questaoEditar';
 import QuestoesListar from '../screens/admin/questoesListar';
@@ -53,13 +52,6 @@ export const routes: IRoutes[] = [
         showInMenu: false
     },
     // ADMIN
-    {
-        adminRole: true,
-        component: Admin,
-        layout: LayoutAdmin,
-        order: 0,
-        routeLabel: 'Admin'
-    },
     {
         adminRole: true,
         component: QuestaoCriar,

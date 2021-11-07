@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useRef } from 'react';
 import { Alert, Dimensions, Platform, ScrollView, TouchableOpacity, StyleSheet, View } from 'react-native';
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
@@ -53,19 +53,16 @@ function Login(): ReactElement {
 
     // STATE
     const { status } = stateAuth;
-    const { routeParams, routeToRedirect } = (route.params as IRouteParams) || {};
+    const { routeParams } = (route.params as IRouteParams) || {};
 
-    useEffect(() => {
-        if (status === ActionType.LOGGED_IN) {
-            if (routeToRedirect) {
-                navigation.dispatch(CommonActions.navigate({ name: routeToRedirect, params: routeParams }));
-            } else {
-                navigation.dispatch(CommonActions.navigate({ name: 'Categorias Questões' }));
-            }
-        }
-
-        return undefined;
-    }, [navigation, routeParams, routeToRedirect, status]);
+    // FUNCTION
+    const redirect = (): void => {
+        navigation.dispatch(
+            CommonActions.navigate(
+                routeParams?.routeToRedirect ? { name: routeParams?.routeToRedirect, params: routeParams } : { name: 'Categorias Questões' }
+            )
+        );
+    };
 
     // FORM
     const formRef = useRef<FormHandles>(null);
@@ -82,7 +79,10 @@ function Login(): ReactElement {
                     abortEarly: false
                 })
                 .then(() => {
-                    actions?.login(data).catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]));
+                    actions
+                        ?.login(data)
+                        .then(() => redirect())
+                        .catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]));
                 });
 
             formRef.current?.setErrors({});
@@ -161,7 +161,10 @@ function Login(): ReactElement {
                                 buttonStyle={{ ...button.buttonPrimary, ...styles.buttonGoogle }}
                                 disabled={status === ActionType.ATTEMPTING}
                                 onPress={(): any =>
-                                    actions?.loginGoogle().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
+                                    actions
+                                        ?.loginGoogle()
+                                        .then(() => redirect())
+                                        .catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
                                 }
                                 title="Login Google"
                                 type="solid"
@@ -173,7 +176,10 @@ function Login(): ReactElement {
                                 buttonStyle={{ ...button.buttonPrimary, ...styles.buttonFacebook }}
                                 disabled={status === ActionType.ATTEMPTING}
                                 onPress={(): any =>
-                                    actions?.loginFacebook().catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
+                                    actions
+                                        ?.loginFacebook()
+                                        .then(() => redirect())
+                                        .catch((loginError) => Alert.alert('Erro:', loginError.toString(), [{ text: 'Fechar' }]))
                                 }
                                 title="Login Facebook"
                                 type="solid"
