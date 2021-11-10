@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, Platform, PermissionsAndroid, ScrollView, StyleSheet, TouchableOpacity, View, Rationale } from 'react-native';
 
 import { useRoute } from '@react-navigation/native';
-import { Button } from 'react-native-elements';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
 import { IQuestao } from '../../entities/questao';
 
@@ -10,7 +10,6 @@ import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
 import { P, Span, Title2, Title4 } from '../../components/text/text';
 
-import { button } from '../../styles/button';
 import { layout } from '../../styles/layout';
 import { variable } from '../../styles/variable';
 
@@ -88,10 +87,87 @@ function Resultado(): ReactElement {
     const route: Record<string, any> = useRoute();
 
     // STATE
+    const [stateQuestoesHtml, setStateQuestoesHtml] = useState<string>('');
     const [stateQuestoesRespostas, setStateQuestoesRespostas] = useState<IQuestao[]>([]);
 
+    // FUNCTION
+    const isPermitted = async (): Promise<boolean> => {
+        if (Platform.OS === 'android') {
+            try {
+                const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
+                    title: 'Permissão para gravar o arquivo',
+                    message: 'O aplicativo precisa de permissão'
+                } as Rationale);
+
+                return granted === PermissionsAndroid.RESULTS.GRANTED;
+            } catch (err) {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
+    const createHtml = (questoes: IQuestao[]): string => {
+        let questaoHtml = '';
+
+        function verificaQuestao(alt: string, altc: any, altn: number, alts: any): string {
+            return `<tr style="color: ${alt === alts ? (altc === alts ? variable.colorSuccess : variable.colorError) : variable.fontColor};"/>
+                        <td style="font-weight: 600; width: 20%;">Alternativa ${altn}:</td>
+                        <td style="font-weight: ${alt === alts ? 600 : 400}; width: 65%;">${alt}</td>
+                        <td style="width: 15%;">${alt === alts ? (altc === alts ? '✔' : 'X') : ''}</td>
+                    </tr>`;
+        }
+
+        for (let i = 0, l = questoes.length; i < l; i += 1) {
+            const questaoObj = questoes[i];
+
+            if (questaoObj) {
+                questaoHtml += `
+                    <tr><td colspan="3">${questaoObj.questao}</td></tr>
+                    ${verificaQuestao(questaoObj.alt1, questaoObj[questaoObj.altc], 1, questaoObj.alts)}
+                    ${verificaQuestao(questaoObj.alt2, questaoObj[questaoObj.altc], 2, questaoObj.alts)}
+                    ${verificaQuestao(questaoObj.alt3, questaoObj[questaoObj.altc], 3, questaoObj.alts)}
+                    ${verificaQuestao(questaoObj.alt4, questaoObj[questaoObj.altc], 4, questaoObj.alts)}
+                    ${verificaQuestao(questaoObj.alt5, questaoObj[questaoObj.altc], 5, questaoObj.alts)}
+                    <tr>
+                        <td colspan="3"><hr /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                `;
+            }
+        }
+
+        return `<h3 style="text-align: center;">Resultado - Quiz IT</h3><table cellpadding="5"><tbody>${questaoHtml}</tbody></table>`;
+    };
+
+    const createPDF = async (): Promise<void> => {
+        const permitted = await isPermitted();
+
+        if (permitted) {
+            const options = {
+                html: stateQuestoesHtml,
+                fileName: 'quizit-resultado',
+                directory: 'Download'
+            };
+
+            const file = await RNHTMLtoPDF.convert(options);
+
+            Alert.alert(`Arquivo salvo em ${file.filePath as string}`, '', [
+                {
+                    text: 'Fechar'
+                }
+            ]);
+        }
+    };
+
+    // USEEFFECT
     useEffect(() => {
         if (route.params?.questoes) {
+            setStateQuestoesHtml(createHtml(route.params?.questoes));
+
             setStateQuestoesRespostas(route.params?.questoes);
         }
 
@@ -107,7 +183,7 @@ function Resultado(): ReactElement {
                     <Spacer />
 
                     <View style={styles.export}>
-                        <TouchableOpacity onPress={(): any => null}>
+                        <TouchableOpacity onPress={(): any => createPDF()}>
                             <Title4 textAlign="center">
                                 <Span>Exportar para </Span>
                                 <Span bold={true} color={variable.colorRed}>
