@@ -1,14 +1,17 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Alert, Dimensions, Platform, PermissionsAndroid, ScrollView, StyleSheet, TouchableOpacity, View, Rationale } from 'react-native';
+import { Alert, Dimensions, Linking, Platform, PermissionsAndroid, ScrollView, StyleSheet, TouchableOpacity, View, Rationale } from 'react-native';
 
+import storage from '@react-native-firebase/storage';
 import { useRoute } from '@react-navigation/native';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
+import { displayName } from '../../../app.json';
+import { useAuth } from '../../contexts/auth';
 import { IQuestao } from '../../entities/questao';
 
 import { HorizontalLine } from '../../components/layout/line';
 import { Spacer } from '../../components/layout/spacer';
-import { P, Span, Title2, Title4 } from '../../components/text/text';
+import { P, Span, Title2 } from '../../components/text/text';
 
 import { layout } from '../../styles/layout';
 import { variable } from '../../styles/variable';
@@ -66,7 +69,12 @@ function Resultado(): ReactElement {
     // STYLE
     const styles = StyleSheet.create({
         export: {
-            alignItems: 'center'
+            justifyContent: 'center',
+            flexDirection: 'row'
+        },
+        exportText: {
+            justifyContent: 'center',
+            flexDirection: 'row'
         },
         questoesRespostas: {
             backgroundColor: variable.colorWhite,
@@ -84,7 +92,14 @@ function Resultado(): ReactElement {
     });
 
     // CONTEXT
+    const { stateAuth } = useAuth();
     const route: Record<string, any> = useRoute();
+
+    const pdfFileName = `quizit-resultado-${stateAuth.data?.displayName?.replace(/\s/g, '') || ''}`;
+
+    // REF
+    const storageRef = storage().ref();
+    const pdfRef = storageRef.child(`${pdfFileName}.pdf`);
 
     // STATE
     const [stateQuestoesHtml, setStateQuestoesHtml] = useState<string>('');
@@ -163,6 +178,42 @@ function Resultado(): ReactElement {
         }
     };
 
+    const createPDFToLinkedin = async (): Promise<void> => {
+        const permitted = await isPermitted();
+
+        if (permitted) {
+            try {
+                const options = {
+                    html: stateQuestoesHtml,
+                    fileName: pdfFileName,
+                    directory: 'Download'
+                };
+
+                const file = await RNHTMLtoPDF.convert(options);
+                const pathToFile = file.filePath || '';
+
+                await pdfRef.putFile(pathToFile);
+
+                const urlLinkedin = `https://www.linkedin.com/sharing/share-offsite/?title=${displayName as string}&url=`;
+                const url = await pdfRef.getDownloadURL();
+
+                const supported = await Linking.canOpenURL(`${urlLinkedin}${url}`);
+
+                if (supported) {
+                    await Linking.openURL(`${urlLinkedin}${url}`);
+                } else {
+                    Alert.alert('Não foi possível abrir a URL', '', [
+                        {
+                            text: 'Fechar'
+                        }
+                    ]);
+                }
+            } catch (err) {
+                console.log('Erro: ', err);
+            }
+        }
+    };
+
     // USEEFFECT
     useEffect(() => {
         if (route.params?.questoes) {
@@ -183,17 +234,38 @@ function Resultado(): ReactElement {
                     <Spacer />
 
                     <View style={styles.export}>
-                        <TouchableOpacity onPress={(): any => createPDF()}>
-                            <Title4 textAlign="center">
-                                <Span>Exportar para </Span>
-                                <Span bold={true} color={variable.colorRed}>
-                                    PDF
-                                </Span>
-                            </Title4>
-                        </TouchableOpacity>
+                        <View>
+                            <TouchableOpacity onPress={(): any => createPDF()}>
+                                <View style={styles.exportText}>
+                                    <Span>Exportar para </Span>
+                                    <Span bold={true} color={variable.colorRed}>
+                                        PDF
+                                    </Span>
+                                </View>
+                            </TouchableOpacity>
+
+                            <View>
+                                <HorizontalLine width="100%" />
+                            </View>
+                        </View>
 
                         <View>
-                            <HorizontalLine width={180} />
+                            <Spacer width={variable.spacingLG} />
+                        </View>
+
+                        <View>
+                            <TouchableOpacity onPress={(): any => createPDFToLinkedin()}>
+                                <View style={styles.exportText}>
+                                    <Span>Compartilhar no </Span>
+                                    <Span bold={true} color={variable.colorBlue}>
+                                        Linkedin
+                                    </Span>
+                                </View>
+                            </TouchableOpacity>
+
+                            <View>
+                                <HorizontalLine width="100%" />
+                            </View>
                         </View>
                     </View>
 
