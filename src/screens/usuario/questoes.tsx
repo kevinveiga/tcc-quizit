@@ -60,10 +60,10 @@ function Questoes(): ReactElement {
 
     // DATA
     useEffect(() => {
-        if (route.params?.name) {
+        if (route.params?.nameCategoria) {
             const questoes = async (): Promise<void> => {
                 await firestore()
-                    .collection(`questoes${(route.params?.name as string).toLowerCase()}`)
+                    .collection(`questoes${(route.params?.nameCategoria as string).toLowerCase()}`)
                     .get()
                     .then((querySnapshot: Record<string, any>) => {
                         setStateQuestoesTotal(querySnapshot.size);
@@ -82,13 +82,13 @@ function Questoes(): ReactElement {
         }
 
         return undefined;
-    }, [route.params?.name]);
+    }, [route.params?.nameCategoria]);
 
     useEffect(() => {
-        if (route.params?.name) {
+        if (route.params?.nameCategoria) {
             const respostas = async (): Promise<void> => {
                 await firestore()
-                    .collection(`questoes${(route.params?.name as string).toLowerCase()}`)
+                    .collection(`questoes${(route.params?.nameCategoria as string).toLowerCase()}`)
                     .where('numeroquestao', '==', stateQuestaoAtualNumero)
                     .get()
                     .then((querySnapshot) => {
@@ -121,7 +121,7 @@ function Questoes(): ReactElement {
         }
 
         return undefined;
-    }, [route.params?.name, stateQuestaoAtualNumero]);
+    }, [route.params?.nameCategoria, stateQuestaoAtualNumero]);
 
     // FUNCTION
     const respostas = (newQuestaoAtualNumero: number): IQuestao[] => {
@@ -150,7 +150,9 @@ function Questoes(): ReactElement {
     };
 
     const resultado = (): void => {
-        navigation.dispatch(CommonActions.navigate({ name: 'Resultado', params: { questoes: respostas(1) } }));
+        navigation.dispatch(
+            CommonActions.navigate({ name: 'Resultado', params: { nameCategoria: route.params?.nameCategoria, questoes: respostas(1) } })
+        );
     };
 
     return (
@@ -158,7 +160,7 @@ function Questoes(): ReactElement {
             <ScrollView>
                 <View style={styles.questoes}>
                     <Title2 textAlign="center">
-                        Questão {stateQuestaoAtualNumero} de {stateQuestoesTotal} - {route.params?.name}
+                        Questão {stateQuestaoAtualNumero} de {stateQuestoesTotal} - {route.params?.nameCategoria}
                     </Title2>
 
                     <Spacer />

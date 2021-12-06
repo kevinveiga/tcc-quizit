@@ -95,7 +95,7 @@ function Resultado(): ReactElement {
     const { stateAuth } = useAuth();
     const route: Record<string, any> = useRoute();
 
-    const pdfFileName = `quizit-resultado-${stateAuth.data?.displayName?.replace(/\s/g, '') || ''}`;
+    const pdfFileName = `Quizit-Resultado-${route.params?.nameCategoria as string}-${stateAuth.data?.displayName?.replace(/\s/g, '') || ''}`;
 
     // REF
     const storageRef = storage().ref();
@@ -164,7 +164,7 @@ function Resultado(): ReactElement {
         if (permitted) {
             const options = {
                 html: stateQuestoesHtml,
-                fileName: 'quizit-resultado',
+                fileName: pdfFileName,
                 directory: 'Download'
             };
 

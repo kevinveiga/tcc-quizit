@@ -49,7 +49,9 @@ function QuestoesCategorias(): ReactElement {
 
                                     <Button
                                         buttonStyle={button.buttonPrimary}
-                                        onPress={(): any => navigation.dispatch(CommonActions.navigate({ name: 'Questões', params: { name: name } }))}
+                                        onPress={(): any =>
+                                            navigation.dispatch(CommonActions.navigate({ name: 'Questões', params: { nameCategoria: name } }))
+                                        }
                                         title={name}
                                         type="solid"
                                     />
