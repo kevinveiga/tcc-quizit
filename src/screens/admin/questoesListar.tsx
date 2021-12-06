@@ -1,10 +1,11 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
 
+import { useApp } from '../../contexts/app';
 import { IQuestao } from '../../entities/questao';
 import { IQuestoesCategorias } from '../../interface';
 import { questoesCategorias } from '../../questoesCategorias';
@@ -52,6 +53,7 @@ function QuestoesListar(): ReactElement {
     });
 
     // CONTEXT
+    const { setStateLoader } = useApp();
     const navigation = useNavigation();
 
     // STATE
@@ -59,38 +61,57 @@ function QuestoesListar(): ReactElement {
     const [stateSelectedItem, setStateSelectedItem] = useState(null);
 
     // FUNCTION
-    const listarQuestoes = async (categoria: string): Promise<void> => {
-        await firestore()
-            .collection(`questoes${categoria.toLowerCase()}`)
-            .get()
-            .then((querySnapshot: Record<string, any>) => {
-                const questoesArray: IQuestao[] = [];
+    const listarQuestoes = useCallback(
+        async (categoria: string): Promise<void> => {
+            try {
+                setStateLoader(true);
 
-                querySnapshot.forEach((documentSnapshot: any) => {
-                    questoesArray.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
-                });
+                await firestore()
+                    .collection(`questoes${categoria.toLowerCase()}`)
+                    .get()
+                    .then((querySnapshot: Record<string, any>) => {
+                        const questoesArray: IQuestao[] = [];
 
-                setStateQuestoes(questoesArray);
-            });
-    };
+                        querySnapshot.forEach((documentSnapshot: any) => {
+                            questoesArray.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
+                        });
+
+                        setStateQuestoes(questoesArray);
+                    });
+            } catch (err: any) {
+                console.error(err);
+            } finally {
+                setStateLoader(false);
+            }
+        },
+        [setStateLoader]
+    );
 
     const removerQuestao = (id: any): void => {
         if (stateSelectedItem) {
             const questao = async (): Promise<void> => {
-                await firestore()
-                    .collection(`questoes${(stateSelectedItem as string).toLowerCase()}`)
-                    .doc(id)
-                    .delete()
-                    .then(() => {
-                        listarQuestoes(stateSelectedItem).catch((err: any) => console.error(err));
+                try {
+                    setStateLoader(true);
 
-                        Alert.alert('Questão removida!', '', [
-                            {
-                                text: 'Fechar',
-                                onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
-                            }
-                        ]);
-                    });
+                    await firestore()
+                        .collection(`questoes${(stateSelectedItem as string).toLowerCase()}`)
+                        .doc(id)
+                        .delete()
+                        .then(() => {
+                            listarQuestoes(stateSelectedItem).catch((err: any) => console.error(err));
+
+                            Alert.alert('Questão removida!', '', [
+                                {
+                                    text: 'Fechar',
+                                    onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
+                                }
+                            ]);
+                        });
+                } catch (err: any) {
+                    console.error(err);
+                } finally {
+                    setStateLoader(false);
+                }
             };
 
             questao().catch((err: any) => console.error(err));
@@ -112,7 +133,7 @@ function QuestoesListar(): ReactElement {
         }
 
         return undefined;
-    }, [stateSelectedItem]);
+    }, [listarQuestoes, stateSelectedItem]);
 
     return (
         <View style={layout.container}>

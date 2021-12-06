@@ -7,6 +7,7 @@ import { SubmitHandler, FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { Button } from 'react-native-elements';
 
+import { useApp } from '../../contexts/app';
 import Yup from '../../helpers/yup';
 import { IFormQuestao } from '../../interface';
 
@@ -59,8 +60,9 @@ function QuestaoEditar(): ReactElement {
     });
 
     // CONTEXT
-    const route: Record<string, any> = useRoute();
+    const { setStateLoader } = useApp();
     const navigation = useNavigation();
+    const route: Record<string, any> = useRoute();
 
     // REF
     const formRef = useRef<FormHandles>(null);
@@ -72,24 +74,32 @@ function QuestaoEditar(): ReactElement {
     useEffect(() => {
         if (route.params?.categoria && route.params?.id) {
             const questoes = async (): Promise<void> => {
-                await firestore()
-                    .collection(`questoes${(route.params?.categoria as string).toLowerCase()}`)
-                    .doc((route.params?.id as string).toLowerCase())
-                    .get()
-                    .then((documentSnapshot: Record<string, any>) => {
-                        if (documentSnapshot.exists) {
-                            setStateAlternativaCerta(documentSnapshot.data().altc);
+                try {
+                    setStateLoader(true);
 
-                            formRef.current?.setData(documentSnapshot.data());
-                        }
-                    });
+                    await firestore()
+                        .collection(`questoes${(route.params?.categoria as string).toLowerCase()}`)
+                        .doc((route.params?.id as string).toLowerCase())
+                        .get()
+                        .then((documentSnapshot: Record<string, any>) => {
+                            if (documentSnapshot.exists) {
+                                setStateAlternativaCerta(documentSnapshot.data().altc);
+
+                                formRef.current?.setData(documentSnapshot.data());
+                            }
+                        });
+                } catch (err: any) {
+                    console.error(err);
+                } finally {
+                    setStateLoader(false);
+                }
             };
 
             questoes().catch((err: any) => console.error(err));
         }
 
         return undefined;
-    }, [route.params?.categoria, route.params?.id]);
+    }, [route.params?.categoria, route.params?.id, setStateLoader]);
 
     // FORM
     const handleSubmit: SubmitHandler<IFormQuestao> = async (data) => {
@@ -113,26 +123,34 @@ function QuestaoEditar(): ReactElement {
 
                     if (route.params?.categoria && route.params?.id) {
                         const questaoEditar = async (): Promise<void> => {
-                            await firestore()
-                                .collection(`questoes${(route.params?.categoria as string).toLowerCase()}`)
-                                .doc((route.params?.id as string).toLowerCase())
-                                .update({
-                                    alt1: newData.alt1,
-                                    alt2: newData.alt2,
-                                    alt3: newData.alt3,
-                                    alt4: newData.alt4,
-                                    alt5: newData.alt5,
-                                    altc: newData.altc,
-                                    questao: newData.questao
-                                })
-                                .then(() => {
-                                    Alert.alert('Questão atualizada!', '', [
-                                        {
-                                            text: 'Fechar',
-                                            onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
-                                        }
-                                    ]);
-                                });
+                            try {
+                                setStateLoader(true);
+
+                                await firestore()
+                                    .collection(`questoes${(route.params?.categoria as string).toLowerCase()}`)
+                                    .doc((route.params?.id as string).toLowerCase())
+                                    .update({
+                                        alt1: newData.alt1,
+                                        alt2: newData.alt2,
+                                        alt3: newData.alt3,
+                                        alt4: newData.alt4,
+                                        alt5: newData.alt5,
+                                        altc: newData.altc,
+                                        questao: newData.questao
+                                    })
+                                    .then(() => {
+                                        Alert.alert('Questão atualizada!', '', [
+                                            {
+                                                text: 'Fechar',
+                                                onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
+                                            }
+                                        ]);
+                                    });
+                            } catch (err: any) {
+                                console.error(err);
+                            } finally {
+                                setStateLoader(false);
+                            }
                         };
 
                         questaoEditar().catch((err: any) => console.error(err));
@@ -187,9 +205,9 @@ function QuestaoEditar(): ReactElement {
                                 <View style={styles.alternativaCheckbox}>
                                     <TouchableOpacity onPress={(): any => setStateAlternativaCerta('alt1')}>
                                         {stateAlternativaCerta === 'alt1' ? (
-                                            <SvgCheckboxMark height="3px" width="3px" fill={variable.colorPrimary} />
+                                            <SvgCheckboxMark height="30px" width="30px" fill={variable.colorPrimary} />
                                         ) : (
-                                            <SvgCheckboxUnmark height="3px" width="3px" fill={variable.colorPrimary} />
+                                            <SvgCheckboxUnmark height="30px" width="30px" fill={variable.colorPrimary} />
                                         )}
                                     </TouchableOpacity>
                                 </View>

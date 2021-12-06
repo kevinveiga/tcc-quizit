@@ -8,6 +8,7 @@ import { SubmitHandler, FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { Button } from 'react-native-elements';
 
+import { useApp } from '../../contexts/app';
 import Yup from '../../helpers/yup';
 import { IFormQuestao, IQuestoesCategorias } from '../../interface';
 import { questoesCategorias } from '../../questoesCategorias';
@@ -65,6 +66,7 @@ function QuestaoCriar(): ReactElement {
     const formRef = useRef<FormHandles>(null);
 
     // CONTEXT
+    const { setStateLoader } = useApp();
     const navigation = useNavigation();
 
     // STATE
@@ -76,23 +78,31 @@ function QuestaoCriar(): ReactElement {
     useEffect(() => {
         if (stateSelectedItem) {
             const questoes = async (): Promise<void> => {
-                await firestore()
-                    .collection(`questoes${(stateSelectedItem as string).toLowerCase()}`)
-                    .orderBy('numeroquestao', 'desc')
-                    .limit(1)
-                    .get()
-                    .then((querySnapshot: Record<string, any>) => {
-                        querySnapshot.forEach((documentSnapshot: any) => {
-                            setStateUltimoNumeroQuestao(documentSnapshot.data().numeroquestao);
+                try {
+                    setStateLoader(true);
+
+                    await firestore()
+                        .collection(`questoes${(stateSelectedItem as string).toLowerCase()}`)
+                        .orderBy('numeroquestao', 'desc')
+                        .limit(1)
+                        .get()
+                        .then((querySnapshot: Record<string, any>) => {
+                            querySnapshot.forEach((documentSnapshot: any) => {
+                                setStateUltimoNumeroQuestao(documentSnapshot.data().numeroquestao);
+                            });
                         });
-                    });
+                } catch (err: any) {
+                    console.error(err);
+                } finally {
+                    setStateLoader(false);
+                }
             };
 
             questoes().catch((err: any) => console.error(err));
         }
 
         return undefined;
-    }, [stateSelectedItem]);
+    }, [stateSelectedItem, setStateLoader]);
 
     // FORM
     const handleSubmit: SubmitHandler<IFormQuestao> = async (data) => {
@@ -118,31 +128,39 @@ function QuestaoCriar(): ReactElement {
 
                     if (categoria) {
                         const questaoInserir = async (): Promise<void> => {
-                            await firestore()
-                                .collection(`questoes${(categoria as string).toLowerCase()}`)
-                                .add({
-                                    alt1: newData.alt1,
-                                    alt2: newData.alt2,
-                                    alt3: newData.alt3,
-                                    alt4: newData.alt4,
-                                    alt5: newData.alt5,
-                                    altc: newData.altc,
-                                    catquestao: categoria,
-                                    numeroquestao: ultimoNumeroQuestao,
-                                    questao: newData.questao
-                                })
-                                .then(() => {
-                                    setStateAlternativaCerta('');
+                            try {
+                                setStateLoader(true);
 
-                                    formRef.current?.reset();
+                                await firestore()
+                                    .collection(`questoes${(categoria as string).toLowerCase()}`)
+                                    .add({
+                                        alt1: newData.alt1,
+                                        alt2: newData.alt2,
+                                        alt3: newData.alt3,
+                                        alt4: newData.alt4,
+                                        alt5: newData.alt5,
+                                        altc: newData.altc,
+                                        catquestao: categoria,
+                                        numeroquestao: ultimoNumeroQuestao,
+                                        questao: newData.questao
+                                    })
+                                    .then(() => {
+                                        setStateAlternativaCerta('');
 
-                                    Alert.alert('Questão inserida!', '', [
-                                        {
-                                            text: 'Fechar',
-                                            onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
-                                        }
-                                    ]);
-                                });
+                                        formRef.current?.reset();
+
+                                        Alert.alert('Questão inserida!', '', [
+                                            {
+                                                text: 'Fechar',
+                                                onPress: (): void => navigation.dispatch(CommonActions.navigate({ name: 'Questões Listar' }))
+                                            }
+                                        ]);
+                                    });
+                            } catch (err: any) {
+                                console.error(err);
+                            } finally {
+                                setStateLoader(false);
+                            }
                         };
 
                         questaoInserir().catch((err: any) => console.error(err));

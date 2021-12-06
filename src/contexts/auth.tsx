@@ -36,7 +36,6 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
 
     // REDUCER
     const [stateAuth, dispatch] = useReducer(authReducer, initialState);
-    const { status } = stateAuth;
 
     // STATE
     const [stateAdminRole, setStateAdminRole] = useState(false);
@@ -64,17 +63,6 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
     );
 
     // USEEFFECT
-    // Loader no login
-    useEffect(() => {
-        if (status === ActionType.ATTEMPTING) {
-            setStateLoader(true);
-        }
-
-        return (): void => {
-            setStateLoader(false);
-        };
-    }, [status, setStateLoader]);
-
     // Inicia o GoogleSignin
     useEffect(() => {
         GoogleSignin.configure({
@@ -93,9 +81,7 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
     const actions = {
         login: async (obj: ILogin): Promise<void> => {
             try {
-                dispatch({
-                    type: ActionType.ATTEMPTING
-                });
+                setStateLoader(true);
 
                 await auth().signInWithEmailAndPassword(obj.email, obj.password);
             } catch (err: any) {
@@ -105,13 +91,13 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 throw new Error(err.code);
+            } finally {
+                setStateLoader(false);
             }
         },
         loginCreate: async (obj: ILogin): Promise<void> => {
             try {
-                dispatch({
-                    type: ActionType.ATTEMPTING
-                });
+                setStateLoader(true);
 
                 await auth().createUserWithEmailAndPassword(obj.email, obj.password);
             } catch (err: any) {
@@ -121,13 +107,13 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 throw new Error(err.code);
+            } finally {
+                setStateLoader(false);
             }
         },
         loginFacebook: async (): Promise<void> => {
             try {
-                dispatch({
-                    type: ActionType.ATTEMPTING
-                });
+                setStateLoader(true);
 
                 // Attempt login with permissions
                 const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
@@ -155,13 +141,13 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 throw new Error(err.code);
+            } finally {
+                setStateLoader(false);
             }
         },
         loginGoogle: async (): Promise<void> => {
             try {
-                dispatch({
-                    type: ActionType.ATTEMPTING
-                });
+                setStateLoader(true);
 
                 // Get the users ID token
                 const { idToken } = await GoogleSignin.signIn();
@@ -178,10 +164,14 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 throw new Error(err.code);
+            } finally {
+                setStateLoader(false);
             }
         },
         loginPasswordReset: async (email: string): Promise<void> => {
             try {
+                setStateLoader(true);
+
                 await auth().sendPasswordResetEmail(email);
             } catch (err: any) {
                 dispatch({
@@ -190,10 +180,14 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 throw new Error(err.code);
+            } finally {
+                setStateLoader(false);
             }
         },
         logout: async (): Promise<void> => {
             try {
+                setStateLoader(true);
+
                 await auth().signOut();
             } catch (err: any) {
                 dispatch({
@@ -202,6 +196,8 @@ export function AuthProvider({ children }: PropsWithChildren<any>): ReactElement
                 });
 
                 throw new Error(err.code);
+            } finally {
+                setStateLoader(false);
             }
         }
     };
