@@ -3,7 +3,7 @@ import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } fro
 
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation, useIsFocused } from '@react-navigation/native';
 import { SubmitHandler, FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { Button } from 'react-native-elements';
@@ -68,6 +68,7 @@ function QuestaoCriar(): ReactElement {
     // CONTEXT
     const { setStateLoader } = useApp();
     const navigation = useNavigation();
+    const isFocused = useIsFocused();
 
     // STATE
     const [stateAlternativaCerta, setStateAlternativaCerta] = useState('');
@@ -75,6 +76,12 @@ function QuestaoCriar(): ReactElement {
     const [stateSelectedItem, setStateSelectedItem] = useState(null);
 
     // DATA
+    useEffect(() => {
+        setStateSelectedItem(null);
+
+        return undefined;
+    }, [isFocused]);
+
     useEffect(() => {
         if (stateSelectedItem) {
             const questoes = async (): Promise<void> => {

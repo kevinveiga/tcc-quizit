@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation, useIsFocused } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
 
@@ -55,6 +55,7 @@ function QuestoesListar(): ReactElement {
     // CONTEXT
     const { setStateLoader } = useApp();
     const navigation = useNavigation();
+    const isFocused = useIsFocused();
 
     // STATE
     const [stateQuestoes, setStateQuestoes] = useState<IQuestao[]>([]);
@@ -123,7 +124,7 @@ function QuestoesListar(): ReactElement {
         setStateSelectedItem(null);
 
         return undefined;
-    }, []);
+    }, [isFocused]);
 
     useEffect(() => {
         if (stateSelectedItem) {
