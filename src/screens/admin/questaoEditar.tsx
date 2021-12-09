@@ -79,7 +79,7 @@ function QuestaoEditar(): ReactElement {
 
                     await firestore()
                         .collection(`questoes${(route.params?.categoria as string).toLowerCase()}`)
-                        .doc((route.params?.id as string).toLowerCase())
+                        .doc(route.params?.id)
                         .get()
                         .then((documentSnapshot: Record<string, any>) => {
                             if (documentSnapshot.exists) {
